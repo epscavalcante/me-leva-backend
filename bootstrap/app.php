@@ -1,6 +1,7 @@
 <?php
 
 use Core\Domain\Exceptions\AccountAlreadExistsException;
+use Core\Domain\Exceptions\BusinessLogicException;
 use Core\Domain\Exceptions\NotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -25,4 +26,7 @@ return Application::configure(basePath: dirname(__DIR__))
             abort(Response::HTTP_NOT_FOUND, $e->getMessage());
         });
 
+        $exceptions->report(function (BusinessLogicException $e) {
+            abort(Response::HTTP_UNPROCESSABLE_ENTITY, $e->getMessage());
+        });
     })->create();

@@ -21,6 +21,29 @@ class RideModelRepository implements RideRepository
         $this->rideModel->create([
             'ride_id' => $ride->getId(),
             'passenger_id' => $ride->getPassengerId(),
+            'driver_id' => $ride->getDriverId(),
+            'status' => $ride->getStatus(),
+            'from_latitude' => $ride->getFromLatitude(),
+            'from_longitude' => $ride->getFromLongitude(),
+            'to_latitude' => $ride->getToLatitude(),
+            'to_longitude' => $ride->getToLongitude(),
+        ]);
+    }
+
+    /**
+     * @param  Ride  $ride
+     */
+    public function update(object $ride): void
+    {
+        $rideModel = $this->getBy('ride_id', $ride->getId());
+        if (! $rideModel) {
+            return;
+        }
+
+        $rideModel->update([
+            'ride_id' => $ride->getId(),
+            'passenger_id' => $ride->getPassengerId(),
+            'driver_id' => $ride->getDriverId(),
             'status' => $ride->getStatus(),
             'from_latitude' => $ride->getFromLatitude(),
             'from_longitude' => $ride->getFromLongitude(),
@@ -43,7 +66,7 @@ class RideModelRepository implements RideRepository
         return new Ride(
             rideId: $ride->ride_id,
             passengerId: $ride->passenger_id,
-            // driverId: $ride->driver_id,
+            driverId: $ride->driver_id,
             status: $ride->status,
             fromLatitude: $ride->from_latitude,
             fromLongitude: $ride->from_longitude,

@@ -12,6 +12,11 @@ interface RideRepository
     public function save(object $entity): void;
 
     /**
+     * @param  Ride  $entity
+     */
+    public function update(object $entity): void;
+
+    /**
      * @return Ride | null
      */
     public function getById(string $rideId): ?object;

@@ -13,4 +13,5 @@ Route::controller(RideController::class)
     ->group(function () {
         Route::post('/', 'requestRide');
         Route::get('/{ride_id}', 'getRide');
+        Route::patch('/{ride_id}/accept', 'acceptRide');
     });

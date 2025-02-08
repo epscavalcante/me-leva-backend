@@ -103,4 +103,9 @@ class Account
     {
         return $this->isPassenger();
     }
+
+    public function canAcceptRide(): bool
+    {
+        return $this->isDriver();
+    }
 }

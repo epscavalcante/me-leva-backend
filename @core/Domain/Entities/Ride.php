@@ -2,6 +2,7 @@
 
 namespace Core\Domain\Entities;
 
+use Core\Domain\Exceptions\RideCannotBeAcceptedException;
 use Core\Domain\ValueObjects\Position;
 use Core\Domain\ValueObjects\Uuid;
 
@@ -10,6 +11,8 @@ class Ride
     private Uuid $rideId;
 
     private Uuid $passengerId;
+
+    private ?Uuid $driverId;
 
     private Position $from;
 
@@ -25,8 +28,10 @@ class Ride
         string $fromLongitude,
         string $toLatitude,
         string $toLongitude,
+        ?string $driverId = null,
     ) {
         $this->rideId = new Uuid($rideId);
+        $this->driverId = $driverId ? new Uuid($driverId) : null;
         $this->passengerId = new Uuid($passengerId);
         $this->from = new Position($fromLatitude, $fromLongitude);
         $this->to = new Position($toLatitude, $toLongitude);
@@ -66,7 +71,7 @@ class Ride
 
     public function getDriverId(): ?string
     {
-        return null; //$this->driverId->getValue();
+        return $this->driverId?->getValue();
     }
 
     public function getFromLatitude(): string
@@ -92,5 +97,25 @@ class Ride
     public function getStatus(): string
     {
         return $this->status;
+    }
+
+    public function isRequested(): bool
+    {
+        return $this->status === 'requested';
+    }
+
+    public function canBeAccepted(): bool
+    {
+        return $this->isRequested();
+    }
+
+    public function accept(string $driverId)
+    {
+        if (! $this->canBeAccepted()) {
+            throw new RideCannotBeAcceptedException();
+        }
+
+        $this->status = 'accepted';
+        $this->driverId = new Uuid($driverId);
     }
 }
