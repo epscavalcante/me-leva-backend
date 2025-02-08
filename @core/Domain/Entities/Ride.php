@@ -2,8 +2,9 @@
 
 namespace Core\Domain\Entities;
 
-use Core\Domain\Exceptions\RideCannotBeAcceptedException;
+use Core\Domain\Factories\RideStatusFactory;
 use Core\Domain\ValueObjects\Position;
+use Core\Domain\ValueObjects\RideStatus;
 use Core\Domain\ValueObjects\Uuid;
 
 class Ride
@@ -18,7 +19,7 @@ class Ride
 
     private Position $to;
 
-    private string $status;
+    private RideStatus $status;
 
     public function __construct(
         string $rideId,
@@ -35,7 +36,7 @@ class Ride
         $this->passengerId = new Uuid($passengerId);
         $this->from = new Position($fromLatitude, $fromLongitude);
         $this->to = new Position($toLatitude, $toLongitude);
-        $this->status = $status;
+        $this->status = RideStatusFactory::create($status, $this);
     }
 
     public static function create(
@@ -96,26 +97,22 @@ class Ride
 
     public function getStatus(): string
     {
-        return $this->status;
+        return $this->status->getValue();
     }
 
-    public function isRequested(): bool
+    public function setStatus(RideStatus $status): void
     {
-        return $this->status === 'requested';
-    }
-
-    public function canBeAccepted(): bool
-    {
-        return $this->isRequested();
+        $this->status = $status;
     }
 
     public function accept(string $driverId)
     {
-        if (! $this->canBeAccepted()) {
-            throw new RideCannotBeAcceptedException();
-        }
-
-        $this->status = 'accepted';
+        $this->status->accept();
         $this->driverId = new Uuid($driverId);
+    }
+
+    public function start()
+    {
+        $this->status->start();
     }
 }
