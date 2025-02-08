@@ -6,8 +6,10 @@ use Core\Application\UseCases\AcceptRide;
 use Core\Application\UseCases\DTOs\AcceptRideInput;
 use Core\Application\UseCases\DTOs\GetRideInput;
 use Core\Application\UseCases\DTOs\RequestRideInput;
+use Core\Application\UseCases\DTOs\StartRideInput;
 use Core\Application\UseCases\GetRide;
 use Core\Application\UseCases\RequestRide;
+use Core\Application\UseCases\StartRide;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -32,6 +34,14 @@ class RideController extends Controller
         $driverId = $request->input('driver_id');
         $acceptRideinput = new AcceptRideInput($rideId, $driverId);
         $acceptRide->execute($acceptRideinput);
+
+        return response()->noContent();
+    }
+
+    public function startRide(string $rideId, StartRide $startRide)
+    {
+        $startRideinput = new StartRideInput($rideId);
+        $startRide->execute($startRideinput);
 
         return response()->noContent();
     }
