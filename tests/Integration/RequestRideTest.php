@@ -1,9 +1,9 @@
 <?php
 
 use App\Account as AccountModel;
-use App\Ride as RideModel;
 use App\Repositories\AccountModelRepository;
 use App\Repositories\RideModelRepository;
+use App\Ride as RideModel;
 use Core\Application\UseCases\DTOs\GetRideInput;
 use Core\Application\UseCases\DTOs\GetRideOutput;
 use Core\Application\UseCases\DTOs\RequestRideInput;
@@ -26,13 +26,13 @@ describe('RequestRide', function () {
         );
         $requestRideInput = new RequestRideInput(
             passengerId: Uuid::create(),
-            fromLatitude: "-27.584905257808835",
-            fromLongitude: "-48.545022195325124",
-            toLatitude: "-27.496887588317275",
-            toLongitude: "-48.522234807851476"
+            fromLatitude: '-27.584905257808835',
+            fromLongitude: '-48.545022195325124',
+            toLatitude: '-27.496887588317275',
+            toLongitude: '-48.522234807851476'
         );
 
-        expect(fn() => $requestRide->execute($requestRideInput))->toThrow(AccountNotFoundException::class);
+        expect(fn () => $requestRide->execute($requestRideInput))->toThrow(AccountNotFoundException::class);
     });
 
     test('Deve falhar ao solicitar corrida de uma conta que não pode solicitar corridas (não é conta de passageiro)', function () {
@@ -47,13 +47,13 @@ describe('RequestRide', function () {
         );
         $requestRideInput = new RequestRideInput(
             passengerId: $signupOutput->accountId,
-            fromLatitude: "-27.584905257808835",
-            fromLongitude: "-48.545022195325124",
-            toLatitude: "-27.496887588317275",
-            toLongitude: "-48.522234807851476"
+            fromLatitude: '-27.584905257808835',
+            fromLongitude: '-48.545022195325124',
+            toLatitude: '-27.496887588317275',
+            toLongitude: '-48.522234807851476'
         );
 
-        expect(fn() => $requestRide->execute($requestRideInput))->toThrow(AccountCannotRequestRideException::class);
+        expect(fn () => $requestRide->execute($requestRideInput))->toThrow(AccountCannotRequestRideException::class);
     });
 
     test('Deve solicitar uma corrida', function () {
@@ -69,10 +69,10 @@ describe('RequestRide', function () {
         );
         $requestRideInput = new RequestRideInput(
             passengerId: $signupOutput->accountId,
-            fromLatitude: "-27.584905257808835",
-            fromLongitude: "-48.545022195325124",
-            toLatitude: "-27.496887588317275",
-            toLongitude: "-48.522234807851476"
+            fromLatitude: '-27.584905257808835',
+            fromLongitude: '-48.545022195325124',
+            toLatitude: '-27.496887588317275',
+            toLongitude: '-48.522234807851476'
         );
         $requestRideOutput = $requestRide->execute($requestRideInput);
         $getRide = new GetRide($rideRepository);
@@ -81,9 +81,9 @@ describe('RequestRide', function () {
         expect($getRideOutput)->toBeInstanceOf(GetRideOutput::class);
         expect($getRideOutput->passengerId)->toBe($signupOutput->accountId);
         expect($getRideOutput->status)->toBe('requested');
-        expect($getRideOutput->fromLatitude)->toBe("-27.584905257808835");
-        expect($getRideOutput->fromLongitude)->toBe("-48.545022195325124");
-        expect($getRideOutput->toLatitude)->toBe("-27.496887588317275");
-        expect($getRideOutput->toLongitude)->toBe("-48.522234807851476");
+        expect($getRideOutput->fromLatitude)->toBe('-27.584905257808835');
+        expect($getRideOutput->fromLongitude)->toBe('-48.545022195325124');
+        expect($getRideOutput->toLatitude)->toBe('-27.496887588317275');
+        expect($getRideOutput->toLongitude)->toBe('-48.522234807851476');
     });
 });

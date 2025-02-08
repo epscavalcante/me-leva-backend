@@ -16,4 +16,3 @@ interface RideRepository
      */
     public function getById(string $rideId): ?object;
 }
-

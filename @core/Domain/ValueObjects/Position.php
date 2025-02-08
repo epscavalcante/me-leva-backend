@@ -21,12 +21,13 @@ class Position
 
     private function validate(string $latitude, string $longitude)
     {
-        if ((float) $latitude < -90 || (float) $latitude > 90)
+        if ((float) $latitude < -90 || (float) $latitude > 90) {
             throw new Exception('Invalid latitude');
-        if ((float) $longitude < -180 || (float) $longitude > 180)
+        }
+        if ((float) $longitude < -180 || (float) $longitude > 180) {
             throw new Exception('Invalid longitude');
+        }
     }
-
 
     public function getLatitude(): string
     {

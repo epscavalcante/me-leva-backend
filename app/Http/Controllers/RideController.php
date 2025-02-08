@@ -21,6 +21,7 @@ class RideController extends Controller
             toLongitude: $request->input('to_longitude'),
         );
         $requestRideOutput = $requesRide->execute($requestRideInput);
+
         return response()->json($requestRideOutput, Response::HTTP_CREATED);
     }
 
@@ -28,6 +29,7 @@ class RideController extends Controller
     {
         $getRideInput = new GetRideInput($rideId);
         $getRideOutput = $getRide->execute($getRideInput);
+
         return response()->json($getRideOutput, Response::HTTP_OK);
     }
 }

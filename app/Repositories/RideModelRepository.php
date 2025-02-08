@@ -10,10 +10,11 @@ class RideModelRepository implements RideRepository
 {
     public function __construct(
         private readonly RideModel $rideModel
-    ) {}
+    ) {
+    }
 
     /**
-     * @param Ride $ride
+     * @param  Ride  $ride
      */
     public function save(object $ride): void
     {

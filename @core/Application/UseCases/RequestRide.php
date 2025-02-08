@@ -4,8 +4,6 @@ namespace Core\Application\UseCases;
 
 use Core\Application\Repositories\AccountRepository;
 use Core\Application\Repositories\RideRepository;
-use Core\Application\UseCases\DTOs\GetAccountInput;
-use Core\Application\UseCases\DTOs\GetAccountOutput;
 use Core\Application\UseCases\DTOs\RequestRideInput;
 use Core\Application\UseCases\DTOs\RequestRideOutput;
 use Core\Domain\Entities\Ride;
@@ -17,7 +15,8 @@ class RequestRide
     public function __construct(
         private readonly RideRepository $rideRepository,
         private readonly AccountRepository $accountRepository,
-    ) {}
+    ) {
+    }
 
     public function execute(RequestRideInput $input): RequestRideOutput
     {
@@ -26,7 +25,7 @@ class RequestRide
             throw new AccountNotFoundException();
         }
 
-        if (!$account->canRequestRide()) {
+        if (! $account->canRequestRide()) {
             throw new AccountCannotRequestRideException();
         }
 

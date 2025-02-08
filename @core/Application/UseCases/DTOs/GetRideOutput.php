@@ -13,5 +13,6 @@ class GetRideOutput
         public readonly string $fromLongitude,
         public readonly string $toLatitude,
         public readonly string $toLongitude,
-    ) {}
+    ) {
+    }
 }

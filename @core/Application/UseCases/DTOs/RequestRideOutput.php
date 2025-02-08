@@ -6,5 +6,6 @@ class RequestRideOutput
 {
     public function __construct(
         public readonly string $rideId,
-    ) {}
+    ) {
+    }
 }
