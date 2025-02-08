@@ -27,24 +27,24 @@ jobs:
       run: vendor/bin/pint --test
     - name: Execute Unit tests
       run: php artisan test --testsuite=Unit
-    # - name: Execute Integration tests
-    #   run: php artisan test --testsuite=Unit
+    - name: Execute Integration tests
+      run: php artisan test --testsuite=Unit
 
-  deploy:
-    name: Deploy
-    if: github.event_name != 'pull_request'
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Log in to DockerHub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_HUB_USER }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
-      - name: Build & push da imagem do docker
-        uses: docker/build-push-action@v3
-        with:
-          file: ./Dockerfile.prod
-          push: true
-          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}, ${{ env.IMAGE_NAME }}:latest
+  # deploy:
+  #   name: Deploy
+  #   if: github.event_name != 'pull_request'
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Log in to DockerHub
+  #       uses: docker/login-action@v2
+  #       with:
+  #         username: ${{ secrets.DOCKER_HUB_USER }}
+  #         password: ${{ secrets.DOCKER_HUB_TOKEN }}
+  #     - name: Build & push da imagem do docker
+  #       uses: docker/build-push-action@v3
+  #       with:
+  #         file: ./Dockerfile.prod
+  #         push: true
+  #         tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}, ${{ env.IMAGE_NAME }}:latest
