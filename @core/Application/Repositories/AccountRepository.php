@@ -2,7 +2,7 @@
 
 namespace Core\Application\Repositories;
 
-use Core\Domain\Account;
+use Core\Domain\Entities\Account;
 
 interface AccountRepository
 {

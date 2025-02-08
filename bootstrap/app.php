@@ -1,10 +1,12 @@
 <?php
 
 use Core\Domain\Exceptions\AccountAlreadExistsException;
+use Core\Domain\Exceptions\NotFoundException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -18,6 +20,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->report(function (AccountAlreadExistsException $e) {
             abort(Response::HTTP_CONFLICT, $e->getMessage());
+        });
+
+        $exceptions->report(function (NotFoundException $e) {
+            abort(Response::HTTP_NOT_FOUND, $e->getMessage());
         });
 
     })->create();
