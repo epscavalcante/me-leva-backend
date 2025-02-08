@@ -28,7 +28,7 @@ jobs:
     - name: Execute Unit tests
       run: php artisan test --testsuite=Unit
     - name: Execute Integration tests
-      run: php artisan test --testsuite=Unit
+      run: php artisan test --testsuite=Integration
 
   # deploy:
   #   name: Deploy
