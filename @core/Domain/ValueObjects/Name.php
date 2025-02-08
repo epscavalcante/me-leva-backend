@@ -28,8 +28,9 @@ class Name
     {
         $length = strlen($value);
         $isValid = $length > self::NAME_MIN_LENGTH && $length <= self::NAME_MAX_LENGTH;
-        if (!$isValid)
+        if (! $isValid) {
             throw new Exception('Invalid name');
+        }
     }
 
     public function getFirstName(): string

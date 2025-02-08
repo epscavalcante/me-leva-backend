@@ -2,18 +2,18 @@
 
 namespace Core\Application\UseCases;
 
-use Core\Domain\Entities\Account;
 use Core\Application\Repositories\AccountRepository;
 use Core\Application\UseCases\DTOs\SignupInput;
 use Core\Application\UseCases\DTOs\SignupOutput;
+use Core\Domain\Entities\Account;
 use Core\Domain\Exceptions\AccountAlreadExistsException;
-use Exception;
 
 class Signup
 {
     public function __construct(
         private readonly AccountRepository $accountRepository
-    ) {}
+    ) {
+    }
 
     public function execute(SignupInput $input): SignupOutput
     {
@@ -28,8 +28,9 @@ class Signup
 
         $accountExists = $this->accountRepository->getByEmail($account->getEmail());
 
-        if ($accountExists)
+        if ($accountExists) {
             throw new AccountAlreadExistsException();
+        }
 
         $this->accountRepository->save($account);
 

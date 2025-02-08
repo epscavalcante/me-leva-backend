@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class AccountFactory extends Factory
 {
-
     /**
      * The name of the factory's corresponding model.
      *
@@ -30,7 +29,7 @@ class AccountFactory extends Factory
             'first_name' => $this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
             'email' => $this->faker->unique()->email(),
-            'phone' => $this->faker->numerify("###########"),
+            'phone' => $this->faker->numerify('###########'),
             'is_passenger' => $this->faker->boolean(),
             'is_driver' => $this->faker->boolean(),
         ];
@@ -43,7 +42,7 @@ class AccountFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'is_driver' => true,
-            'is_passenger' => false
+            'is_passenger' => false,
         ]);
     }
 
@@ -54,7 +53,7 @@ class AccountFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'is_driver' => false,
-            'is_passenger' => true
+            'is_passenger' => true,
         ]);
     }
 
@@ -65,7 +64,7 @@ class AccountFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'is_driver' => true,
-            'is_passenger' => true
+            'is_passenger' => true,
         ]);
     }
 }

@@ -24,6 +24,7 @@ class SignupController extends Controller
             isPassenger: $request->input('is_passenger'),
         );
         $output = $signup->execute($input);
+
         return response()->json($output, Response::HTTP_CREATED);
     }
 }

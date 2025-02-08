@@ -2,18 +2,23 @@
 
 namespace Core\Domain\Entities;
 
-use Core\Domain\ValueObjects\Uuid;
 use Core\Domain\ValueObjects\Email;
 use Core\Domain\ValueObjects\Name;
 use Core\Domain\ValueObjects\Phone;
+use Core\Domain\ValueObjects\Uuid;
 
 class Account
 {
     private Uuid $accountId;
+
     private Name $name;
+
     private Email $email;
+
     private Phone $phone;
+
     private bool $isDriver;
+
     private bool $isPassenger;
 
     public function __construct(
@@ -33,7 +38,7 @@ class Account
         $this->isDriver = $isDriver;
     }
 
-    static function create(
+    public static function create(
         string $firstName,
         string $lastName,
         string $email,
@@ -42,6 +47,7 @@ class Account
         bool $isDriver,
     ) {
         $accountId = Uuid::create();
+
         return new Account(
             accountId: $accountId,
             firstName: $firstName,
