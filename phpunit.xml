@@ -18,6 +18,7 @@
     <source>
         <include>
             <directory>app</directory>
+            <directory>@core</directory>
         </include>
     </source>
     <php>

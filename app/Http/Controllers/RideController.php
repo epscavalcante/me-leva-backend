@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Core\Application\UseCases\AcceptRide;
+use Core\Application\UseCases\DTOs\AcceptRideInput;
 use Core\Application\UseCases\DTOs\GetRideInput;
 use Core\Application\UseCases\DTOs\RequestRideInput;
 use Core\Application\UseCases\GetRide;
@@ -23,6 +25,15 @@ class RideController extends Controller
         $requestRideOutput = $requesRide->execute($requestRideInput);
 
         return response()->json($requestRideOutput, Response::HTTP_CREATED);
+    }
+
+    public function acceptRide(Request $request, string $rideId, AcceptRide $acceptRide)
+    {
+        $driverId = $request->input('driver_id');
+        $acceptRideinput = new AcceptRideInput($rideId, $driverId);
+        $acceptRide->execute($acceptRideinput);
+
+        return response()->noContent();
     }
 
     public function getRide(string $rideId, GetRide $getRide)

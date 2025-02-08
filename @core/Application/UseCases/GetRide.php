@@ -24,7 +24,7 @@ class GetRide
         return new GetRideOutput(
             rideId: $ride->getId(),
             passengerId: $ride->getPassengerId(),
-            //driverId: $ride->getDriverId(),
+            driverId: $ride->getDriverId(),
             status: $ride->getStatus(),
             fromLatitude: $ride->getFromLatitude(),
             fromLongitude: $ride->getFromLongitude(),
