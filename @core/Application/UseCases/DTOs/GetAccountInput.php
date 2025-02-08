@@ -2,7 +2,7 @@
 
 namespace Core\Application\UseCases\DTOs;
 
-class SignupOutput
+class GetAccountInput
 {
     public function __construct(
         public readonly string $accountId,

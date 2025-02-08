@@ -3,14 +3,15 @@
 namespace App\Repositories;
 
 use App\Account as AccountModel;
-use Core\Domain\Entities\Account;
 use Core\Application\Repositories\AccountRepository;
+use Core\Domain\Entities\Account;
 
 class AccountModelRepository implements AccountRepository
 {
     public function __construct(
         private readonly AccountModel $accountModel
-    ) {}
+    ) {
+    }
 
     public function save(object $account): void
     {
@@ -26,13 +27,15 @@ class AccountModelRepository implements AccountRepository
     }
 
     /**
-     * @param  string $email
      * @return Account | null
      */
-    public function getByEmail(string $email): object | null
+    public function getById(string $accountId): ?object
     {
-        $account = $this->accountModel->query()->where('email', $email)->first();
-        if (!$account) return null;
+        $account = $this->getBy('account_id', $accountId);
+        if (! $account) {
+            return null;
+        }
+
         return new Account(
             accountId: $account->account_id,
             firstName: $account->first_name,
@@ -42,5 +45,32 @@ class AccountModelRepository implements AccountRepository
             isDriver: $account->is_driver,
             isPassenger: $account->is_passenger,
         );
+    }
+
+    /**
+     * @return Account | null
+     */
+    public function getByEmail(string $email): ?object
+    {
+        $account = $this->getBy('email', $email);
+        if (! $account) {
+            return null;
+        }
+
+        return new Account(
+            accountId: $account->account_id,
+            firstName: $account->first_name,
+            lastName: $account->last_name,
+            email: $account->email,
+            phone: $account->phone,
+            isDriver: $account->is_driver,
+            isPassenger: $account->is_passenger,
+        );
+    }
+
+    private function getBy(string $field, string|int $value): ?AccountModel
+    {
+        return $this->accountModel->query()
+            ->firstWhere($field, $value);
     }
 }

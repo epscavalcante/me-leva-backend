@@ -2,8 +2,6 @@
 
 namespace Core\Domain\Exceptions;
 
-use Exception;
-
 class AccountAlreadExistsException extends BusinessLogicException
 {
     public function __construct()

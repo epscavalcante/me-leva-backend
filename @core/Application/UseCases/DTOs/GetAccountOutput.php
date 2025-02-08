@@ -2,9 +2,10 @@
 
 namespace Core\Application\UseCases\DTOs;
 
-class SignupInput
+class GetAccountOutput
 {
     public function __construct(
+        public readonly string $accountId,
         public readonly string $firstName,
         public readonly string $lastName,
         public readonly string $email,
