@@ -15,7 +15,6 @@ use Core\Application\UseCases\GetRide;
 use Core\Application\UseCases\RequestRide;
 use Core\Application\UseCases\Signup;
 use Core\Application\UseCases\StartRide;
-use Core\Domain\Exceptions\RideCannotBeAcceptedException;
 use Core\Domain\Exceptions\RideCannotBeStartedException;
 use Core\Domain\Exceptions\RideNotFoundException;
 use Core\Domain\ValueObjects\Uuid;
