@@ -27,9 +27,12 @@ jobs:
       run: vendor/bin/pint --test
     - name: Execute Unit tests
       run: php artisan test --testsuite=Unit
+    # - name: Execute Integration tests
+    #   run: php artisan test --testsuite=Unit
 
   deploy:
     name: Deploy
+    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     steps:
