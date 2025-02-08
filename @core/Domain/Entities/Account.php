@@ -98,4 +98,9 @@ class Account
     {
         return $this->isPassenger;
     }
+
+    public function canRequestRide(): bool
+    {
+        return $this->isPassenger();
+    }
 }
