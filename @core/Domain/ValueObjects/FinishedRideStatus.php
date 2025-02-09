@@ -4,14 +4,15 @@ namespace Core\Domain\ValueObjects;
 
 use Core\Domain\Entities\Ride;
 use Core\Domain\Exceptions\RideCannotBeAcceptedException;
+use Core\Domain\Exceptions\RideCannotBeFinishedException;
 use Core\Domain\Exceptions\RideCannotBeRequestedException;
 use Core\Domain\Exceptions\RideCannotBeStartedException;
 
-class InProgressRideStatus extends RideStatus
+class FinishedRideStatus extends RideStatus
 {
     public function __construct(readonly Ride $ride)
     {
-        parent::__construct('in_progress');
+        parent::__construct('completed');
     }
 
     public function request(): void
@@ -31,6 +32,6 @@ class InProgressRideStatus extends RideStatus
 
     public function finish(): void
     {
-        $this->ride->setStatus(new FinishedRideStatus($this->ride));
+        throw new RideCannotBeFinishedException();
     }
 }

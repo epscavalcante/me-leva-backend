@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Core\Application\UseCases\AcceptRide;
 use Core\Application\UseCases\DTOs\AcceptRideInput;
+use Core\Application\UseCases\DTOs\FinishRideInput;
 use Core\Application\UseCases\DTOs\GetRideInput;
 use Core\Application\UseCases\DTOs\RequestRideInput;
 use Core\Application\UseCases\DTOs\StartRideInput;
+use Core\Application\UseCases\FinishRide;
 use Core\Application\UseCases\GetRide;
 use Core\Application\UseCases\RequestRide;
 use Core\Application\UseCases\StartRide;
@@ -42,6 +44,14 @@ class RideController extends Controller
     {
         $startRideinput = new StartRideInput($rideId);
         $startRide->execute($startRideinput);
+
+        return response()->noContent();
+    }
+
+    public function finishRide(string $rideId, FinishRide $finishRide)
+    {
+        $finishRideinput = new FinishRideInput($rideId);
+        $finishRide->execute($finishRideinput);
 
         return response()->noContent();
     }

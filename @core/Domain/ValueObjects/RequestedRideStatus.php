@@ -3,6 +3,7 @@
 namespace Core\Domain\ValueObjects;
 
 use Core\Domain\Entities\Ride;
+use Core\Domain\Exceptions\RideCannotBeFinishedException;
 use Core\Domain\Exceptions\RideCannotBeRequestedException;
 use Core\Domain\Exceptions\RideCannotBeStartedException;
 
@@ -26,5 +27,10 @@ class RequestedRideStatus extends RideStatus
     public function start(): void
     {
         throw new RideCannotBeStartedException();
+    }
+
+    public function finish(): void
+    {
+        throw new RideCannotBeFinishedException();
     }
 }
