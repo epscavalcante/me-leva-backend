@@ -7,7 +7,7 @@ use Core\Domain\ValueObjects\Name;
 use Core\Domain\ValueObjects\Phone;
 use Core\Domain\ValueObjects\Uuid;
 
-class Account
+class Account extends Entity
 {
     private Uuid $accountId;
 

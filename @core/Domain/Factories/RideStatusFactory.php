@@ -4,6 +4,7 @@ namespace Core\Domain\Factories;
 
 use Core\Domain\Entities\Ride;
 use Core\Domain\ValueObjects\AcceptedRideStatus;
+use Core\Domain\ValueObjects\FinishedRideStatus;
 use Core\Domain\ValueObjects\InProgressRideStatus;
 use Core\Domain\ValueObjects\RequestedRideStatus;
 use Core\Domain\ValueObjects\RideStatus;
@@ -23,6 +24,10 @@ class RideStatusFactory
 
         if ($status === 'in_progress') {
             return new InProgressRideStatus($ride);
+        }
+
+        if ($status === 'completed') {
+            return new FinishedRideStatus($ride);
         }
 
         throw new Exception('Invalid ride status');

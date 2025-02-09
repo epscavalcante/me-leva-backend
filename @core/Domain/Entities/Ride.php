@@ -7,7 +7,7 @@ use Core\Domain\ValueObjects\Position;
 use Core\Domain\ValueObjects\RideStatus;
 use Core\Domain\ValueObjects\Uuid;
 
-class Ride
+class Ride extends Entity
 {
     private Uuid $rideId;
 
@@ -114,5 +114,10 @@ class Ride
     public function start()
     {
         $this->status->start();
+    }
+
+    public function finish()
+    {
+        $this->status->finish();
     }
 }
