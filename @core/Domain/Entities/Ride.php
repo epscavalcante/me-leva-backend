@@ -2,12 +2,14 @@
 
 namespace Core\Domain\Entities;
 
+use Core\Domain\Events\EventDispatcher;
+use Core\Domain\Events\RideFinishedEvent;
 use Core\Domain\Factories\RideStatusFactory;
 use Core\Domain\ValueObjects\Position;
 use Core\Domain\ValueObjects\RideStatus;
 use Core\Domain\ValueObjects\Uuid;
 
-class Ride extends Entity
+class Ride extends EventDispatcher
 {
     private Uuid $rideId;
 
@@ -31,6 +33,8 @@ class Ride extends Entity
         string $toLongitude,
         ?string $driverId = null,
     ) {
+        parent::__construct();
+
         $this->rideId = new Uuid($rideId);
         $this->driverId = $driverId ? new Uuid($driverId) : null;
         $this->passengerId = new Uuid($passengerId);
@@ -118,6 +122,8 @@ class Ride extends Entity
 
     public function finish()
     {
-        $this->status->finish();
+        // $this->status->finish();
+        $eventRideCompleted = new RideFinishedEvent($this);
+        $this->dispatch($eventRideCompleted);
     }
 }

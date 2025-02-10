@@ -7,16 +7,20 @@ use App\Ride as RideModel;
 use Core\Application\UseCases\AcceptRide;
 use Core\Application\UseCases\DTOs\AcceptRideInput;
 use Core\Application\UseCases\DTOs\FinishRideInput;
+use Core\Application\UseCases\DTOs\GenerateReceiptInput;
 use Core\Application\UseCases\DTOs\GetRideInput;
 use Core\Application\UseCases\DTOs\GetRideOutput;
 use Core\Application\UseCases\DTOs\RequestRideInput;
 use Core\Application\UseCases\DTOs\SignupInput;
 use Core\Application\UseCases\DTOs\StartRideInput;
 use Core\Application\UseCases\FinishRide;
+use Core\Application\UseCases\GenerateReceipt;
 use Core\Application\UseCases\GetRide;
 use Core\Application\UseCases\RequestRide;
 use Core\Application\UseCases\Signup;
 use Core\Application\UseCases\StartRide;
+use Core\Domain\Events\EventDispatcher;
+use Core\Domain\Events\RideFinishedEvent;
 use Core\Domain\Exceptions\RideCannotBeFinishedException;
 use Core\Domain\Exceptions\RideNotFoundException;
 use Core\Domain\ValueObjects\Uuid;
@@ -40,8 +44,19 @@ beforeEach(function () {
         rideRepository: $rideRepository
     );
 
+    $this->generateReceipt = new GenerateReceipt(
+        rideRepository: $rideRepository,
+    );
+
+    $eventDispatcher = new EventDispatcher();
+    $generateReceipt = $this->generateReceipt;
+    $eventDispatcher->register('RIDE.COMPLETED', function (RideFinishedEvent $event) {
+        $generateReceiptInput = new GenerateReceiptInput($event->getData()['ride_id']);
+        $this->generateReceipt->execute($generateReceiptInput);
+    });
     $this->finishRide = new FinishRide(
-        rideRepository: $rideRepository
+        rideRepository: $rideRepository,
+        eventDispatcher: $eventDispatcher
     );
 
     $this->getRide = new GetRide(
