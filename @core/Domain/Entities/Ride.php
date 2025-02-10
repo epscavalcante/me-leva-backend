@@ -122,7 +122,7 @@ class Ride extends EventDispatcher
 
     public function finish()
     {
-        // $this->status->finish();
+        $this->status->finish();
         $eventRideCompleted = new RideFinishedEvent($this);
         $this->dispatch($eventRideCompleted);
     }
