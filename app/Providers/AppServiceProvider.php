@@ -6,6 +6,10 @@ use App\Repositories\AccountModelRepository;
 use App\Repositories\RideModelRepository;
 use Core\Application\Repositories\AccountRepository;
 use Core\Application\Repositories\RideRepository;
+use Core\Application\UseCases\DTOs\GenerateReceiptInput;
+use Core\Application\UseCases\GenerateReceipt;
+use Core\Domain\Events\EventDispatcher;
+use Core\Domain\Events\RideFinishedEvent;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -24,6 +28,11 @@ class AppServiceProvider extends ServiceProvider
             RideRepository::class,
             RideModelRepository::class
         );
+
+        $this->app->singleton(
+            EventDispatcher::class,
+            EventDispatcher::class
+        );
     }
 
     /**
@@ -31,6 +40,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $generateReceipt = $this->app->make(GenerateReceipt::class);
+        $eventDispatcher = $this->app->get(EventDispatcher::class);
+        $eventDispatcher->register(RideFinishedEvent::name(), function (RideFinishedEvent $event) use ($generateReceipt) {
+            $rideId = $event->getData()['ride_id'];
+            $generateReceiptInput = new GenerateReceiptInput($rideId);
+            $generateReceipt->execute($generateReceiptInput);
+        });
+
         //Model::preventLazyLoading(! $this->app->isProduction());
     }
 }
