@@ -17,7 +17,7 @@ class EventDispatcher
             $this->handlers,
             [
                 'eventName' => $eventName,
-                'callback' => $callback
+                'callback' => $callback,
             ]
         );
     }

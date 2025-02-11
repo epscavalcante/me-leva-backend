@@ -10,7 +10,8 @@ class GenerateReceipt
 {
     public function __construct(
         private readonly RideRepository $rideRepository,
-    ) {}
+    ) {
+    }
 
     public function execute(GenerateReceiptInput $input): void
     {

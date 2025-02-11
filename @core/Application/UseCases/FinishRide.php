@@ -12,7 +12,8 @@ class FinishRide
     public function __construct(
         private readonly RideRepository $rideRepository,
         private readonly EventDispatcher $eventDispatcher,
-    ) {}
+    ) {
+    }
 
     public function execute(FinishRideInput $input): void
     {
@@ -21,7 +22,7 @@ class FinishRide
             throw new RideNotFoundException();
         }
 
-        $ride->register('RIDE.COMPLETED', function ($event) use($ride) {
+        $ride->register('RIDE.COMPLETED', function ($event) use ($ride) {
             $this->rideRepository->update($ride);
             $this->eventDispatcher->dispatch($event);
         });

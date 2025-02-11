@@ -8,7 +8,8 @@ class RideFinishedEvent implements Event
 {
     public function __construct(
         private readonly Ride $ride
-    ) {}
+    ) {
+    }
 
     public static function name(): string
     {
@@ -23,7 +24,7 @@ class RideFinishedEvent implements Event
     public function getData(): array
     {
         return [
-            'ride_id' => $this->ride->getId()
+            'ride_id' => $this->ride->getId(),
         ];
     }
 }

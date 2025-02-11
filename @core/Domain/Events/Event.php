@@ -4,7 +4,7 @@ namespace Core\Domain\Events;
 
 interface Event
 {
-    static function name(): string;
+    public static function name(): string;
 
     public function getName(): string;
 
