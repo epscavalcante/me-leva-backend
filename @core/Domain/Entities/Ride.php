@@ -5,7 +5,8 @@ namespace Core\Domain\Entities;
 use Core\Domain\Events\EventDispatcher;
 use Core\Domain\Events\RideFinishedEvent;
 use Core\Domain\Factories\RideStatusFactory;
-use Core\Domain\ValueObjects\Position;
+use Core\Domain\Services\DistanceCalculator;
+use Core\Domain\ValueObjects\Coordinate;
 use Core\Domain\ValueObjects\RideStatus;
 use Core\Domain\ValueObjects\Uuid;
 
@@ -17,9 +18,13 @@ class Ride extends EventDispatcher
 
     private ?Uuid $driverId;
 
-    private Position $from;
+    private Coordinate $from;
 
-    private Position $to;
+    private int $fare;
+
+    private int $distance;
+
+    private Coordinate $to;
 
     private RideStatus $status;
 
@@ -32,15 +37,19 @@ class Ride extends EventDispatcher
         string $toLatitude,
         string $toLongitude,
         ?string $driverId = null,
+        int $fare = 0,
+        int $distance = 0,
     ) {
         parent::__construct();
 
         $this->rideId = new Uuid($rideId);
         $this->driverId = $driverId ? new Uuid($driverId) : null;
         $this->passengerId = new Uuid($passengerId);
-        $this->from = new Position($fromLatitude, $fromLongitude);
-        $this->to = new Position($toLatitude, $toLongitude);
+        $this->from = new Coordinate($fromLatitude, $fromLongitude);
+        $this->to = new Coordinate($toLatitude, $toLongitude);
         $this->status = RideStatusFactory::create($status, $this);
+        $this->distance = $distance;
+        $this->fare = $fare;
     }
 
     public static function create(
@@ -52,15 +61,21 @@ class Ride extends EventDispatcher
     ) {
         $rideId = Uuid::create();
         $status = 'requested';
+        $driverId = null;
+        $distance = 0;
+        $fare = 0;
 
         return new Ride(
             rideId: $rideId,
             passengerId: $passengerId,
+            driverId: $driverId,
             status: $status,
             fromLatitude: $fromLatitude,
             fromLongitude: $fromLongitude,
             toLatitude: $toLatitude,
             toLongitude: $toLongitude,
+            distance: $distance,
+            fare: $fare
         );
     }
 
@@ -104,6 +119,16 @@ class Ride extends EventDispatcher
         return $this->status->getValue();
     }
 
+    public function getFare(): int
+    {
+        return $this->fare;
+    }
+
+    public function getDistance(): int
+    {
+        return $this->distance;
+    }
+
     public function setStatus(RideStatus $status): void
     {
         $this->status = $status;
@@ -120,10 +145,22 @@ class Ride extends EventDispatcher
         $this->status->start();
     }
 
-    public function finish()
+    /**
+     * @param  Position[]  $positions
+     */
+    public function finish(array $positions)
     {
+
         $this->status->finish();
+        $distance = DistanceCalculator::calculateByPositions($positions);
+        $this->distance = $distance;
+        $this->fare = $distance * 2.1;
         $eventRideCompleted = new RideFinishedEvent($this);
         $this->dispatch($eventRideCompleted);
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->getStatus() === 'completed';
     }
 }
