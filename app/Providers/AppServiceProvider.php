@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Repositories\AccountModelRepository;
+use App\Repositories\PositionModelRepository;
 use App\Repositories\RideModelRepository;
 use Core\Application\Repositories\AccountRepository;
+use Core\Application\Repositories\PositionRepository;
 use Core\Application\Repositories\RideRepository;
 use Core\Application\UseCases\DTOs\GenerateReceiptInput;
 use Core\Application\UseCases\GenerateReceipt;
@@ -27,6 +29,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(
             RideRepository::class,
             RideModelRepository::class
+        );
+
+        $this->app->singleton(
+            PositionRepository::class,
+            PositionModelRepository::class
         );
 
         $this->app->singleton(
