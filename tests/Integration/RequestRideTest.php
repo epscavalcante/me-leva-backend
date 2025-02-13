@@ -1,7 +1,9 @@
 <?php
 
 use App\Account as AccountModel;
+use App\Position as PositionModel;
 use App\Repositories\AccountModelRepository;
+use App\Repositories\PositionModelRepository;
 use App\Repositories\RideModelRepository;
 use App\Ride as RideModel;
 use Core\Application\UseCases\DTOs\GetRideInput;
@@ -75,7 +77,12 @@ describe('RequestRide', function () {
             toLongitude: '-48.522234807851476'
         );
         $requestRideOutput = $requestRide->execute($requestRideInput);
-        $getRide = new GetRide($rideRepository);
+        $positionRepository = new PositionModelRepository(new PositionModel());
+        $this->getRide = new GetRide(
+            rideRepository: $rideRepository,
+            positionRepository: $positionRepository
+        );
+        $getRide = new GetRide($rideRepository, $positionRepository);
         $getRideInput = new GetRideInput($requestRideOutput->rideId);
         $getRideOutput = $getRide->execute($getRideInput);
         expect($getRideOutput)->toBeInstanceOf(GetRideOutput::class);

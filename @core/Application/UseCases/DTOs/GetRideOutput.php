@@ -8,11 +8,14 @@ class GetRideOutput
         public readonly string $rideId,
         public readonly string $passengerId,
         public readonly string $status,
+        public readonly float $distance,
+        public readonly float $fare,
         public readonly string $fromLatitude,
         public readonly string $fromLongitude,
         public readonly string $toLatitude,
         public readonly string $toLongitude,
         public readonly ?string $driverId = null,
+        public readonly array $positions = [],
     ) {
     }
 }

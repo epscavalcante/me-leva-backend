@@ -4,7 +4,7 @@ namespace Core\Domain\ValueObjects;
 
 use Exception;
 
-class Position
+class Coordinate
 {
     private string $latitude;
 

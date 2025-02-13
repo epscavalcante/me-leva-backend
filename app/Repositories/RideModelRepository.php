@@ -23,6 +23,8 @@ class RideModelRepository implements RideRepository
             'passenger_id' => $ride->getPassengerId(),
             'driver_id' => $ride->getDriverId(),
             'status' => $ride->getStatus(),
+            'distance' => $ride->getDistance(),
+            'fare' => $ride->getFare(),
             'from_latitude' => $ride->getFromLatitude(),
             'from_longitude' => $ride->getFromLongitude(),
             'to_latitude' => $ride->getToLatitude(),
@@ -45,6 +47,8 @@ class RideModelRepository implements RideRepository
             'passenger_id' => $ride->getPassengerId(),
             'driver_id' => $ride->getDriverId(),
             'status' => $ride->getStatus(),
+            'distance' => $ride->getDistance(),
+            'fare' => $ride->getFare(),
             'from_latitude' => $ride->getFromLatitude(),
             'from_longitude' => $ride->getFromLongitude(),
             'to_latitude' => $ride->getToLatitude(),
@@ -57,21 +61,23 @@ class RideModelRepository implements RideRepository
      */
     public function getById(string $rideId): ?object
     {
-        $ride = $this->getBy('ride_id', $rideId);
+        $rideModel = $this->getBy('ride_id', $rideId);
 
-        if (! $ride) {
+        if (! $rideModel) {
             return null;
         }
 
         return new Ride(
-            rideId: $ride->ride_id,
-            passengerId: $ride->passenger_id,
-            driverId: $ride->driver_id,
-            status: $ride->status,
-            fromLatitude: $ride->from_latitude,
-            fromLongitude: $ride->from_longitude,
-            toLatitude: $ride->to_latitude,
-            toLongitude: $ride->to_longitude,
+            rideId: $rideModel->ride_id,
+            passengerId: $rideModel->passenger_id,
+            driverId: $rideModel->driver_id,
+            status: $rideModel->status,
+            fare: $rideModel->fare,
+            distance: $rideModel->distance,
+            fromLatitude: $rideModel->from_latitude,
+            fromLongitude: $rideModel->from_longitude,
+            toLatitude: $rideModel->to_latitude,
+            toLongitude: $rideModel->to_longitude,
         );
     }
 
