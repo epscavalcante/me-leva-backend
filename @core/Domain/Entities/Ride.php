@@ -20,9 +20,9 @@ class Ride extends EventDispatcher
 
     private Coordinate $from;
 
-    private int $fare;
+    private float $fare;
 
-    private int $distance;
+    private float $distance;
 
     private Coordinate $to;
 
@@ -37,8 +37,8 @@ class Ride extends EventDispatcher
         string $toLatitude,
         string $toLongitude,
         ?string $driverId = null,
-        int $fare = 0,
-        int $distance = 0,
+        float $fare = 0,
+        float $distance = 0,
     ) {
         parent::__construct();
 
@@ -119,12 +119,12 @@ class Ride extends EventDispatcher
         return $this->status->getValue();
     }
 
-    public function getFare(): int
+    public function getFare(): float
     {
         return $this->fare;
     }
 
-    public function getDistance(): int
+    public function getDistance(): float
     {
         return $this->distance;
     }
@@ -162,5 +162,10 @@ class Ride extends EventDispatcher
     public function isCompleted(): bool
     {
         return $this->getStatus() === 'completed';
+    }
+
+    public function isInProgress(): bool
+    {
+        return $this->getStatus() === 'in_progress';
     }
 }
