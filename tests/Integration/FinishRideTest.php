@@ -171,7 +171,7 @@ describe('FinishRide', function () {
 
         expect($getRideOutput)->toBeInstanceOf(GetRideOutput::class);
         expect($getRideOutput->status)->toBe('completed');
-        expect($getRideOutput->distance)->toBe(30.0);
-        expect($getRideOutput->fare)->toBe(63.0);
+        expect($getRideOutput->distance)->toBe(30.12504735293619);
+        expect($getRideOutput->fare)->toBe(63.262599441166);
     });
 });

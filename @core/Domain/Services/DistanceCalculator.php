@@ -13,8 +13,7 @@ class DistanceCalculator
         $endLatitude = deg2rad((float) $end->getLatitude());
         $endLongitude = deg2rad((float) $end->getLongitude());
         $dist = (6371 * acos(cos($startLatitude) * cos($endLatitude) * cos($endLongitude - $startLongitude) + sin($startLatitude) * sin($endLatitude)));
-
-        return round($dist);
+        return $dist;
     }
 
     /**
@@ -34,7 +33,6 @@ class DistanceCalculator
             $nextPosition = $positions[$nextPositionKey];
             $distance += DistanceCalculator::calculate($value->getCoordinate(), $nextPosition->getCoordinate());
         }
-
         return $distance;
     }
 }
