@@ -24,30 +24,26 @@ class GetRide
             throw new RideNotFoundException();
         }
 
-        $distance = $this->getDistance($ride);
+        $positions = $this->positionRepository->getPositionsByRideId($ride->getId());
 
         return new GetRideOutput(
             rideId: $ride->getId(),
             passengerId: $ride->getPassengerId(),
             driverId: $ride->getDriverId(),
             status: $ride->getStatus(),
-            distance: $distance,
+            distance: DistanceCalculator::calculateByPositions($positions),
             fare: $ride->getFare(),
             fromLatitude: $ride->getFromLatitude(),
             fromLongitude: $ride->getFromLongitude(),
             toLatitude: $ride->getToLatitude(),
             toLongitude: $ride->getToLongitude(),
+            positions: array_map(
+                fn($position) => [
+                    'latitude' => $position->getLatitude(),
+                    'longitude' => $position->getLongitude(),
+                ],
+                $positions
+            )
         );
-    }
-
-    private function getDistance($ride): int
-    {
-        if ($ride->isCompleted()) {
-            return $ride->getDistance();
-        }
-
-        $positions = $this->positionRepository->getPositionsByRideId($ride->getId());
-
-        return DistanceCalculator::calculateByPositions($positions);
     }
 }
