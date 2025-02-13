@@ -38,7 +38,7 @@ class GetRide
             toLatitude: $ride->getToLatitude(),
             toLongitude: $ride->getToLongitude(),
             positions: array_map(
-                fn($position) => [
+                fn ($position) => [
                     'latitude' => $position->getLatitude(),
                     'longitude' => $position->getLongitude(),
                 ],

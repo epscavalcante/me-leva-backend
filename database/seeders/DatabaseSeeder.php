@@ -79,7 +79,7 @@ class DatabaseSeeder extends Seeder
         $rideId = Uuid::create();
         $distance = DistanceCalculator::calculateByPositions(
             positions: array_map(
-                fn($positionData) => Position::create($rideId, $positionData['latitude'], $positionData['longitude']),
+                fn ($positionData) => Position::create($rideId, $positionData['latitude'], $positionData['longitude']),
                 $positions
             )
         );
@@ -107,7 +107,7 @@ class DatabaseSeeder extends Seeder
             return $positionData->toArray();
         }
 
-        $positionsData = array_map(fn($position) => map($position), $positions);
+        $positionsData = array_map(fn ($position) => map($position), $positions);
         $ride->positions()->createMany($positionsData);
 
         return $ride;

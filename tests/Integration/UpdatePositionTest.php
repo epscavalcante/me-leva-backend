@@ -117,6 +117,6 @@ describe('UpdatePosition', function () {
         $getRideInput = new GetRideInput($requestRideOutput->rideId);
         $getRideOutput = $this->getRide->execute($getRideInput);
 
-        expect($getRideOutput->distance)->toBe( 30.12504735293619);
+        expect($getRideOutput->distance)->toBe(30.12504735293619);
     });
 });
