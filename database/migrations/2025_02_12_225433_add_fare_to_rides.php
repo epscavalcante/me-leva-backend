@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('rides', function (Blueprint $table) {
-            $table->unsignedBigInteger('fare')->default(0)->after('distance');
+            $table->unsignedBigInteger('fare')->default(0)->after('status');
         });
     }
 
