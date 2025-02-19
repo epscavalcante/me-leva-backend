@@ -15,8 +15,8 @@ COPY . /var/www
 
 # RUN composer install
 
-RUN composer install --optimize-autoloader --no-dev \
-    && php artisan optimize
+RUN composer install --optimize-autoloader --no-dev
+    # && php artisan optimize
     # chmod -R 775 storage
     # o config:cache é perigoso pois mesmo passando variavel ambiente ele não carrega, pois agora é via arquivo
     #&& php artisan config:cache \
@@ -40,9 +40,6 @@ RUN rm -rf /var/www/html
 
 COPY --from=builder /var/www .
 
-RUN apt-get update && apt-get install -y nginx
-COPY nginx.conf /etc/nginx/sites-available/default
+EXPOSE 9000
 
-EXPOSE 80
-
-CMD service nginx start && php-fpm
+ENTRYPOINT [ "php-fpm" ]
