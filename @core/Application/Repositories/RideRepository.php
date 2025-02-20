@@ -3,6 +3,7 @@
 namespace Core\Application\Repositories;
 
 use Core\Domain\Entities\Ride;
+use Core\Application\Repositories\RideSearchResult;
 
 interface RideRepository
 {
@@ -20,4 +21,6 @@ interface RideRepository
      * @return Ride | null
      */
     public function getById(string $rideId): ?object;
+
+    public function getRides(?int $page = 1, ?int $perPage = 10, ?string $sortBy, ?string $sortDir = null, ?string $status = null): RideSearchResult;
 }

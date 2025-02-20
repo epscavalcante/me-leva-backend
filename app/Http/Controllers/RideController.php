@@ -6,10 +6,12 @@ use Core\Application\UseCases\AcceptRide;
 use Core\Application\UseCases\DTOs\AcceptRideInput;
 use Core\Application\UseCases\DTOs\FinishRideInput;
 use Core\Application\UseCases\DTOs\GetRideInput;
+use Core\Application\UseCases\DTOs\GetRidesInput;
 use Core\Application\UseCases\DTOs\RequestRideInput;
 use Core\Application\UseCases\DTOs\StartRideInput;
 use Core\Application\UseCases\FinishRide;
 use Core\Application\UseCases\GetRide;
+use Core\Application\UseCases\GetRides;
 use Core\Application\UseCases\RequestRide;
 use Core\Application\UseCases\StartRide;
 use Illuminate\Http\Request;
@@ -62,5 +64,19 @@ class RideController extends Controller
         $getRideOutput = $getRide->execute($getRideInput);
 
         return response()->json($getRideOutput, Response::HTTP_OK);
+    }
+
+    public function getRides(Request $request, GetRides $getRides)
+    {
+        $getRidesInput = new GetRidesInput(
+            status: $request->input('status', null),
+            page: $request->input('page', null),
+            perPage: $request->input('perPage', null),
+            sortBy: $request->input('sortBy', null),
+            sortDir: $request->input('sortDir', null),
+        );
+        $getRidesOutput = $getRides->execute($getRidesInput);
+
+        return response()->json($getRidesOutput, Response::HTTP_OK);
     }
 }

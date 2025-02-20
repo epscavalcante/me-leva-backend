@@ -10,8 +10,7 @@ class AccountModelRepository implements AccountRepository
 {
     public function __construct(
         private readonly AccountModel $accountModel
-    ) {
-    }
+    ) {}
 
     public function save(object $account): void
     {
@@ -44,6 +43,34 @@ class AccountModelRepository implements AccountRepository
             phone: $account->phone,
             isDriver: $account->is_driver,
             isPassenger: $account->is_passenger,
+        );
+    }
+
+    /**
+     * @return Account[]
+     */
+    public function getByIds(array $accountIds): array
+    {
+        $accountModels = $this->accountModel->query()
+            ->whereIn('account_id', $accountIds)
+            ->get();
+        if ($accountModels->count() === 0) {
+            return [];
+        }
+
+        return array_map(
+            callback: function (AccountModel $accountModel) {
+                return new Account(
+                    accountId: $accountModel->account_id,
+                    firstName: $accountModel->first_name,
+                    lastName: $accountModel->last_name,
+                    email: $accountModel->email,
+                    phone: $accountModel->phone,
+                    isDriver: $accountModel->is_driver,
+                    isPassenger: $accountModel->is_passenger,
+                );
+            },
+            array: $accountModels->all()
         );
     }
 
