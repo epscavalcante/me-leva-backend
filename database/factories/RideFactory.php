@@ -33,7 +33,7 @@ class RideFactory extends Factory
             'from_latitude' => $this->faker->latitude(),
             'from_longitude' => $this->faker->longitude(),
             'to_latitude' => $this->faker->latitude(),
-            'to_longitude' => $this->faker->longitude()
+            'to_longitude' => $this->faker->longitude(),
         ];
     }
 

@@ -48,5 +48,4 @@ class Ride extends Model
     {
         return $this->hasMany(Position::class, 'ride_id', 'ride_id');
     }
-
 }

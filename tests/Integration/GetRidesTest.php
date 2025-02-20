@@ -1,10 +1,10 @@
 <?php
 
 use App\Account;
+use App\Account as AccountModel;
 use App\Repositories\AccountModelRepository;
 use App\Repositories\RideModelRepository;
 use App\Ride as RideModel;
-use App\Account as AccountModel;
 use Core\Application\UseCases\DTOs\GetRidesInput;
 use Core\Application\UseCases\DTOs\GetRidesOutput;
 use Core\Application\UseCases\GetRides;
@@ -17,7 +17,6 @@ beforeEach(function () {
         accountRepository: $accountRepository
     );
 });
-
 
 describe('Get Rides', function () {
 

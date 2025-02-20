@@ -10,7 +10,8 @@ class AccountModelRepository implements AccountRepository
 {
     public function __construct(
         private readonly AccountModel $accountModel
-    ) {}
+    ) {
+    }
 
     public function save(object $account): void
     {

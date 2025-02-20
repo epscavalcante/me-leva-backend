@@ -7,14 +7,14 @@ use Core\Application\Repositories\RideRepository;
 use Core\Application\UseCases\DTOs\GetRidesInput;
 use Core\Application\UseCases\DTOs\GetRidesOutput;
 use Core\Domain\Entities\Account;
-use Core\Domain\Entities\Ride;
 
 class GetRides
 {
     public function __construct(
         private readonly RideRepository $rideRepository,
         private readonly AccountRepository $accountRepository,
-    ) {}
+    ) {
+    }
 
     public function execute(GetRidesInput $input): GetRidesOutput
     {
@@ -33,11 +33,13 @@ class GetRides
             $passengerId = $ride->getPassengerId();
             $driverId = $ride->getDriverId();
 
-            if (! in_array($passengerId, $passengerIds))
+            if (! in_array($passengerId, $passengerIds)) {
                 $passengerIds[] = $passengerId;
+            }
 
-            if (! in_array($driverId, $driverIds))
+            if (! in_array($driverId, $driverIds)) {
                 $driverIds[] = $driverId;
+            }
         }
 
         $accountIds = [
@@ -46,7 +48,6 @@ class GetRides
         ];
 
         $accounts = $this->accountRepository->getByIds($accountIds);
-
 
         $items = [];
 
@@ -57,8 +58,9 @@ class GetRides
             $passenger = null;
             $driver = null;
 
-            if (count($passengersFiltered))
+            if (count($passengersFiltered)) {
                 $passenger = reset($passengersFiltered);
+            }
 
             if (count($driversFiltered)) {
                 $driver = reset($driversFiltered);
@@ -68,9 +70,9 @@ class GetRides
                 'rideId' => $ride->getId(),
                 'status' => $ride->getStatus(),
                 'passengerId' => $ride->getPassengerId(),
-                'passengerName' => $passenger ? $passenger->getName() :  null,
+                'passengerName' => $passenger ? $passenger->getName() : null,
                 'driverId' => $ride->getDriverId(),
-                'driverName' => $driver ? $driver->getName() :  null,
+                'driverName' => $driver ? $driver->getName() : null,
                 'distance' => $ride->getDistance(),
                 'fare' => $ride->getFare(),
                 'fromLatitude' => $ride->getFromLatitude(),
