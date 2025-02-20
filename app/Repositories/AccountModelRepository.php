@@ -48,6 +48,34 @@ class AccountModelRepository implements AccountRepository
     }
 
     /**
+     * @return Account[]
+     */
+    public function getByIds(array $accountIds): array
+    {
+        $accountModels = $this->accountModel->query()
+            ->whereIn('account_id', $accountIds)
+            ->get();
+        if ($accountModels->count() === 0) {
+            return [];
+        }
+
+        return array_map(
+            callback: function (AccountModel $accountModel) {
+                return new Account(
+                    accountId: $accountModel->account_id,
+                    firstName: $accountModel->first_name,
+                    lastName: $accountModel->last_name,
+                    email: $accountModel->email,
+                    phone: $accountModel->phone,
+                    isDriver: $accountModel->is_driver,
+                    isPassenger: $accountModel->is_passenger,
+                );
+            },
+            array: $accountModels->all()
+        );
+    }
+
+    /**
      * @return Account | null
      */
     public function getByEmail(string $email): ?object

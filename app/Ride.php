@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ride extends Model
@@ -37,6 +38,11 @@ class Ride extends Model
      * @var array<int, string>
      */
     protected $fillable = ['ride_id', 'passenger_id', 'driver_id', 'status', 'fare', 'distance', 'from_latitude', 'from_longitude', 'to_latitude', 'to_longitude'];
+
+    public function passenger(): BelongsTo
+    {
+        return $this->belongsTo(Account::class, 'passenger_id', 'account_id');
+    }
 
     public function positions(): HasMany
     {

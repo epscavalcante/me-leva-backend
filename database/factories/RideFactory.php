@@ -28,8 +28,12 @@ class RideFactory extends Factory
             'ride_id' => $this->faker->uuid(),
             'passenger_id' => $this->faker->uuid(),
             'driver_id' => $this->faker->uuid(),
-            'distance' => 0,
-            'fare' => 0,
+            'distance' => $this->faker->numberBetween(),
+            'fare' => $this->faker->numberBetween(),
+            'from_latitude' => $this->faker->latitude(),
+            'from_longitude' => $this->faker->longitude(),
+            'to_latitude' => $this->faker->latitude(),
+            'to_longitude' => $this->faker->longitude(),
         ];
     }
 

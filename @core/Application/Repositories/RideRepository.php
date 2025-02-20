@@ -20,4 +20,6 @@ interface RideRepository
      * @return Ride | null
      */
     public function getById(string $rideId): ?object;
+
+    public function getRides(?int $page, ?int $perPage, ?string $sortBy, ?string $sortDir = null, ?string $status = null): RideSearchResult;
 }

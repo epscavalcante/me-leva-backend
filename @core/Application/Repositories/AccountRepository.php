@@ -20,4 +20,9 @@ interface AccountRepository
      * @return Account | null
      */
     public function getById(string $accountId): ?object;
+
+    /**
+     * @return Account[]
+     */
+    public function getByIds(array $accountId): array;
 }

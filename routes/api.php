@@ -12,6 +12,7 @@ Route::controller(RideController::class)
     ->prefix('rides')
     ->group(function () {
         Route::post('/', 'requestRide');
+        Route::get('/', 'getRides');
         Route::get('/{ride_id}', 'getRide');
         Route::patch('/{ride_id}/accept', 'acceptRide');
         Route::patch('/{ride_id}/start', 'startRide');
