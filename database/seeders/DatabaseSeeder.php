@@ -47,6 +47,12 @@ class DatabaseSeeder extends Seeder
 
         $ride1Positions = json_decode(file_get_contents(database_path('mocks/ride_1_positions.json')), true);
         $this->createRideCompleted($passengers->random(), $drivers->random(), $ride1Positions);
+
+        $ride2Positions = json_decode(file_get_contents(database_path('mocks/ride_2_positions.json')), true);
+        $this->createRideCompleted($passengers->random(), $drivers->random(), $ride2Positions);
+
+        $ride3Positions = json_decode(file_get_contents(database_path('mocks/ride_3_positions.json')), true);
+        $this->createRideCompleted($passengers->random(), $drivers->random(), $ride3Positions);
     }
 
     private function createRideRequested(AccountModel $passenger, array $from, array $to): RideModel
@@ -96,18 +102,18 @@ class DatabaseSeeder extends Seeder
             'to_longitude' => (string) $to['longitude'],
         ]);
 
-        function map($positionData)
-        {
-            $data = [
-                'latitude' => (string) $positionData['latitude'],
-                'longitude' => (string) $positionData['longitude'],
-            ];
-            $positionData = PositionModel::factory()->make($data);
+        $positionsData = array_map(
+            callback: function ($position) {
+                $data = [
+                    'latitude' => (string) $position['latitude'],
+                    'longitude' => (string) $position['longitude'],
+                ];
+                $positionData = PositionModel::factory()->make($data);
 
-            return $positionData->toArray();
-        }
-
-        $positionsData = array_map(fn ($position) => map($position), $positions);
+                return $positionData->toArray();
+            },
+            array: $positions
+        );
         $ride->positions()->createMany($positionsData);
 
         return $ride;
