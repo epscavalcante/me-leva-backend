@@ -6,6 +6,7 @@ use Core\Application\Repositories\PositionRepository;
 use Core\Application\Repositories\RideRepository;
 use Core\Application\UseCases\DTOs\FinishRideInput;
 use Core\Domain\Events\EventDispatcher;
+use Core\Domain\Events\RideFinishedEvent;
 use Core\Domain\Exceptions\RideNotFoundException;
 
 class FinishRide
@@ -24,7 +25,7 @@ class FinishRide
             throw new RideNotFoundException();
         }
 
-        $ride->register('RIDE.COMPLETED', function ($event) use ($ride) {
+        $ride->register(RideFinishedEvent::name(), function ($event) use ($ride) {
             $this->rideRepository->update($ride);
             $this->eventDispatcher->dispatch($event);
         });

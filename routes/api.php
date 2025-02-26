@@ -17,4 +17,5 @@ Route::controller(RideController::class)
         Route::patch('/{ride_id}/accept', 'acceptRide');
         Route::patch('/{ride_id}/start', 'startRide');
         Route::patch('/{ride_id}/finish', 'finishRide');
+        Route::post('/{ride_id}/positions', 'updatePosition');
     });

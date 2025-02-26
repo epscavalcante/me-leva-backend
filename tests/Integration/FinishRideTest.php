@@ -48,17 +48,19 @@ beforeEach(function () {
         rideRepository: $rideRepository
     );
 
+    $eventDispatcher = new EventDispatcher();
+
     $positionRepository = new PositionModelRepository(new PositionModel());
     $this->updatePosition = new UpdatePosition(
         rideRepository: $rideRepository,
         positionRepository: $positionRepository,
+        eventDispatcher: $eventDispatcher
     );
 
     $this->generateReceipt = new GenerateReceipt(
         rideRepository: $rideRepository,
     );
 
-    $eventDispatcher = new EventDispatcher();
     $eventDispatcher->register('RIDE.COMPLETED', function (RideFinishedEvent $event) {
         $generateReceiptInput = new GenerateReceiptInput($event->getData()['ride_id']);
         $this->generateReceipt->execute($generateReceiptInput);

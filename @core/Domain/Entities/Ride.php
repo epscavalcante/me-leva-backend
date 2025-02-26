@@ -4,6 +4,7 @@ namespace Core\Domain\Entities;
 
 use Core\Domain\Events\EventDispatcher;
 use Core\Domain\Events\RideFinishedEvent;
+use Core\Domain\Events\RidePositionUpdatedEvent;
 use Core\Domain\Factories\RideStatusFactory;
 use Core\Domain\Services\DistanceCalculator;
 use Core\Domain\ValueObjects\Coordinate;
@@ -157,6 +158,13 @@ class Ride extends EventDispatcher
         $this->fare = $distance * 2.1;
         $eventRideCompleted = new RideFinishedEvent($this);
         $this->dispatch($eventRideCompleted);
+    }
+
+    public function updatePosition(Position $position)
+    {
+        $ridePositionUpdatedEvent = new RidePositionUpdatedEvent($position);
+
+        $this->dispatch($ridePositionUpdatedEvent);
     }
 
     public function isCompleted(): bool
