@@ -18,6 +18,8 @@ use Core\Application\UseCases\RequestRide;
 use Core\Application\UseCases\Signup;
 use Core\Application\UseCases\StartRide;
 use Core\Application\UseCases\UpdatePosition;
+use Core\Domain\Events\EventDispatcher;
+use Core\Domain\Events\RidePositionUpdatedEvent;
 use Core\Domain\Exceptions\RideNotFoundException;
 use Core\Domain\ValueObjects\Uuid;
 
@@ -40,10 +42,17 @@ beforeEach(function () {
         rideRepository: $rideRepository
     );
 
+    $eventDispatcher = new EventDispatcher();
+
+    $eventDispatcher->register('RIDE.POSITION_UPDATED', function (RidePositionUpdatedEvent $event) {
+        echo "Ride has been position updated" . PHP_EOL;
+    });
+
     $positionRepository = new PositionModelRepository(new PositionModel());
     $this->updatePosition = new UpdatePosition(
         rideRepository: $rideRepository,
-        positionRepository: $positionRepository
+        positionRepository: $positionRepository,
+        eventDispatcher: $eventDispatcher
     );
 
     $this->getRide = new GetRide(
@@ -58,7 +67,7 @@ describe('UpdatePosition', function () {
             rideId: Uuid::create(),
         );
 
-        expect(fn () => $this->startRide->execute($startRideInput))->toThrow(RideNotFoundException::class);
+        expect(fn() => $this->startRide->execute($startRideInput))->toThrow(RideNotFoundException::class);
     });
 
     test('Deve atualizar as posicções de uma corrida', function () {

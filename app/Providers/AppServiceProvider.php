@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Events\PositionUpdated;
 use App\Repositories\AccountModelRepository;
 use App\Repositories\PositionModelRepository;
 use App\Repositories\RideModelRepository;
@@ -12,6 +13,7 @@ use Core\Application\UseCases\DTOs\GenerateReceiptInput;
 use Core\Application\UseCases\GenerateReceipt;
 use Core\Domain\Events\EventDispatcher;
 use Core\Domain\Events\RideFinishedEvent;
+use Core\Domain\Events\RidePositionUpdatedEvent;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -53,6 +55,10 @@ class AppServiceProvider extends ServiceProvider
             $rideId = $event->getData()['ride_id'];
             $generateReceiptInput = new GenerateReceiptInput($rideId);
             $generateReceipt->execute($generateReceiptInput);
+        });
+
+        $eventDispatcher->register(RidePositionUpdatedEvent::name(), function (RidePositionUpdatedEvent $event) {
+            PositionUpdated::dispatch($event->getData());
         });
 
         //Model::preventLazyLoading(! $this->app->isProduction());

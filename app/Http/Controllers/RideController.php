@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdatePositionRequest;
 use Core\Application\UseCases\AcceptRide;
 use Core\Application\UseCases\DTOs\AcceptRideInput;
 use Core\Application\UseCases\DTOs\FinishRideInput;
@@ -9,11 +10,13 @@ use Core\Application\UseCases\DTOs\GetRideInput;
 use Core\Application\UseCases\DTOs\GetRidesInput;
 use Core\Application\UseCases\DTOs\RequestRideInput;
 use Core\Application\UseCases\DTOs\StartRideInput;
+use Core\Application\UseCases\DTOs\UpdatePositionInput;
 use Core\Application\UseCases\FinishRide;
 use Core\Application\UseCases\GetRide;
 use Core\Application\UseCases\GetRides;
 use Core\Application\UseCases\RequestRide;
 use Core\Application\UseCases\StartRide;
+use Core\Application\UseCases\UpdatePosition;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -78,5 +81,18 @@ class RideController extends Controller
         $getRidesOutput = $getRides->execute($getRidesInput);
 
         return response()->json($getRidesOutput, Response::HTTP_OK);
+    }
+
+    public function updatePosition(UpdatePositionRequest $request, string $rideId, UpdatePosition $updatePosition)
+    {
+        $updatePositionInput = new UpdatePositionInput(
+            rideId: $rideId,
+            latitude: $request->validated('latitude'),
+            longitude: $request->validated('longitude'),
+        );
+
+        $updatePosition->execute($updatePositionInput);
+
+        return response()->noContent();
     }
 }
