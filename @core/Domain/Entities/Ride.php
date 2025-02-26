@@ -160,16 +160,12 @@ class Ride extends EventDispatcher
         $this->dispatch($eventRideCompleted);
     }
 
-    /**
-     * @param  Position  $position
-     */
     public function updatePosition(Position $position)
     {
         $ridePositionUpdatedEvent = new RidePositionUpdatedEvent($position);
 
         $this->dispatch($ridePositionUpdatedEvent);
     }
-
 
     public function isCompleted(): bool
     {

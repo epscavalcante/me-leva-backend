@@ -16,7 +16,8 @@ class PositionUpdated implements ShouldBroadcast
      */
     public function __construct(
         private readonly array $data,
-    ) {}
+    ) {
+    }
 
     public function broadcastWith(): array
     {

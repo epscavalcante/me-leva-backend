@@ -45,7 +45,7 @@ beforeEach(function () {
     $eventDispatcher = new EventDispatcher();
 
     $eventDispatcher->register('RIDE.POSITION_UPDATED', function (RidePositionUpdatedEvent $event) {
-        echo "Ride has been position updated" . PHP_EOL;
+        echo 'Ride has been position updated'.PHP_EOL;
     });
 
     $positionRepository = new PositionModelRepository(new PositionModel());
@@ -67,7 +67,7 @@ describe('UpdatePosition', function () {
             rideId: Uuid::create(),
         );
 
-        expect(fn() => $this->startRide->execute($startRideInput))->toThrow(RideNotFoundException::class);
+        expect(fn () => $this->startRide->execute($startRideInput))->toThrow(RideNotFoundException::class);
     });
 
     test('Deve atualizar as posicções de uma corrida', function () {
