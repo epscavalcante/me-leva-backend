@@ -27,22 +27,24 @@ beforeEach(function () {
     $accountRepository = new AccountModelRepository(new AccountModel());
     $this->signup = new Signup(accountRepository: $accountRepository);
 
+    $eventDispatcher = new EventDispatcher();
     $rideRepository = new RideModelRepository(new RideModel());
     $this->requestRide = new RequestRide(
         accountRepository: $accountRepository,
-        rideRepository: $rideRepository
+        rideRepository: $rideRepository,
+        eventDispatcher: $eventDispatcher
     );
 
     $this->acceptRide = new AcceptRide(
         accountRepository: $accountRepository,
-        rideRepository: $rideRepository
+        rideRepository: $rideRepository,
+        eventDispatcher: $eventDispatcher
     );
 
     $this->startRide = new StartRide(
-        rideRepository: $rideRepository
+        rideRepository: $rideRepository,
+        eventDispatcher: $eventDispatcher,
     );
-
-    $eventDispatcher = new EventDispatcher();
 
     $eventDispatcher->register('RIDE.POSITION_UPDATED', function (RidePositionUpdatedEvent $event) {
         echo 'Ride has been position updated'.PHP_EOL;

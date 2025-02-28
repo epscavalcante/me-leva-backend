@@ -3,8 +3,10 @@
 namespace Core\Domain\Entities;
 
 use Core\Domain\Events\EventDispatcher;
+use Core\Domain\Events\RideAcceptedEvent;
 use Core\Domain\Events\RideFinishedEvent;
 use Core\Domain\Events\RidePositionUpdatedEvent;
+use Core\Domain\Events\RideStartedEvent;
 use Core\Domain\Factories\RideStatusFactory;
 use Core\Domain\Services\DistanceCalculator;
 use Core\Domain\ValueObjects\Coordinate;
@@ -139,11 +141,15 @@ class Ride extends EventDispatcher
     {
         $this->status->accept();
         $this->driverId = new Uuid($driverId);
+        $eventRideAccepted = new RideAcceptedEvent($this);
+        $this->dispatch($eventRideAccepted);
     }
 
     public function start()
     {
         $this->status->start();
+        $rideStartedEvent = new RideStartedEvent($this);
+        $this->dispatch($rideStartedEvent);
     }
 
     /**

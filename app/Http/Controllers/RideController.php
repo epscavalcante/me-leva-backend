@@ -33,7 +33,11 @@ class RideController extends Controller
         );
         $requestRideOutput = $requesRide->execute($requestRideInput);
 
-        return response()->json($requestRideOutput, Response::HTTP_CREATED);
+        return response()->json(
+            data: [
+                'ride_id' => $requestRideOutput->rideId,
+            ],
+            status: Response::HTTP_CREATED);
     }
 
     public function acceptRide(Request $request, string $rideId, AcceptRide $acceptRide)

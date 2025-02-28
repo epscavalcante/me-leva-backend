@@ -16,6 +16,11 @@ class RidePositionUpdatedEvent implements Event
         return 'RIDE.POSITION_UPDATED';
     }
 
+    public function getEntityId(): string
+    {
+        return $this->position->getRideId();
+    }
+
     public function getName(): string
     {
         return RidePositionUpdatedEvent::name();
