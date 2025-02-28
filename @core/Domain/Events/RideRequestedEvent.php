@@ -4,16 +4,15 @@ namespace Core\Domain\Events;
 
 use Core\Domain\Entities\Ride;
 
-class RideFinishedEvent implements Event
+class RideRequestedEvent implements Event
 {
     public function __construct(
         private readonly Ride $ride
-    ) {
-    }
+    ) {}
 
     public static function name(): string
     {
-        return 'RIDE.COMPLETED';
+        return 'RIDE.REQUESTED';
     }
 
     public function getEntityId(): string
@@ -23,7 +22,7 @@ class RideFinishedEvent implements Event
 
     public function getName(): string
     {
-        return RideFinishedEvent::name();
+        return RideRequestedEvent::name();
     }
 
     public function getData(): array
