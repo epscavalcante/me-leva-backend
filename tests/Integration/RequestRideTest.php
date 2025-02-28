@@ -13,9 +13,15 @@ use Core\Application\UseCases\DTOs\SignupInput;
 use Core\Application\UseCases\GetRide;
 use Core\Application\UseCases\RequestRide;
 use Core\Application\UseCases\Signup;
+use Core\Domain\Events\EventDispatcher;
 use Core\Domain\Exceptions\AccountCannotRequestRideException;
 use Core\Domain\Exceptions\AccountNotFoundException;
 use Core\Domain\ValueObjects\Uuid;
+
+
+beforeEach(function () {
+    $this->eventDispatcher = new EventDispatcher();
+});
 
 describe('RequestRide', function () {
 
@@ -24,7 +30,8 @@ describe('RequestRide', function () {
         $rideRepository = new RideModelRepository(new RideModel());
         $requestRide = new RequestRide(
             accountRepository: $accountRepository,
-            rideRepository: $rideRepository
+            rideRepository: $rideRepository,
+            eventDispatcher: $this->eventDispatcher
         );
         $requestRideInput = new RequestRideInput(
             passengerId: Uuid::create(),
@@ -45,7 +52,8 @@ describe('RequestRide', function () {
         $rideRepository = new RideModelRepository(new RideModel());
         $requestRide = new RequestRide(
             accountRepository: $accountRepository,
-            rideRepository: $rideRepository
+            rideRepository: $rideRepository,
+            eventDispatcher: $this->eventDispatcher
         );
         $requestRideInput = new RequestRideInput(
             passengerId: $signupOutput->accountId,
@@ -67,7 +75,8 @@ describe('RequestRide', function () {
 
         $requestRide = new RequestRide(
             accountRepository: $accountRepository,
-            rideRepository: $rideRepository
+            rideRepository: $rideRepository,
+            eventDispatcher: $this->eventDispatcher
         );
         $requestRideInput = new RequestRideInput(
             passengerId: $signupOutput->accountId,

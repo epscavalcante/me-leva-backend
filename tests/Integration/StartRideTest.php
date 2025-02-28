@@ -17,6 +17,7 @@ use Core\Application\UseCases\GetRide;
 use Core\Application\UseCases\RequestRide;
 use Core\Application\UseCases\Signup;
 use Core\Application\UseCases\StartRide;
+use Core\Domain\Events\EventDispatcher;
 use Core\Domain\Exceptions\RideCannotBeStartedException;
 use Core\Domain\Exceptions\RideNotFoundException;
 use Core\Domain\ValueObjects\Uuid;
@@ -25,19 +26,23 @@ beforeEach(function () {
     $accountRepository = new AccountModelRepository(new AccountModel());
     $this->signup = new Signup(accountRepository: $accountRepository);
 
+    $eventDispatcher = new EventDispatcher();
     $rideRepository = new RideModelRepository(new RideModel());
     $this->requestRide = new RequestRide(
         accountRepository: $accountRepository,
-        rideRepository: $rideRepository
+        rideRepository: $rideRepository,
+        eventDispatcher: $eventDispatcher
     );
 
     $this->acceptRide = new AcceptRide(
         accountRepository: $accountRepository,
-        rideRepository: $rideRepository
+        rideRepository: $rideRepository,
+        eventDispatcher: $eventDispatcher
     );
 
     $this->startRide = new StartRide(
-        rideRepository: $rideRepository
+        rideRepository: $rideRepository,
+        eventDispatcher: $eventDispatcher
     );
 
     $positionRepository = new PositionModelRepository(new PositionModel());

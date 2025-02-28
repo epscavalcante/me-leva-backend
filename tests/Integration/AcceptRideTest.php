@@ -15,6 +15,7 @@ use Core\Application\UseCases\DTOs\SignupInput;
 use Core\Application\UseCases\GetRide;
 use Core\Application\UseCases\RequestRide;
 use Core\Application\UseCases\Signup;
+use Core\Domain\Events\EventDispatcher;
 use Core\Domain\Exceptions\AccountCannotBeAcceptRideException;
 use Core\Domain\Exceptions\AccountNotFoundException;
 use Core\Domain\Exceptions\RideCannotBeAcceptedException;
@@ -25,15 +26,18 @@ beforeEach(function () {
     $accountRepository = new AccountModelRepository(new AccountModel());
     $this->signup = new Signup(accountRepository: $accountRepository);
 
+    $eventDispatcher = new EventDispatcher();
     $rideRepository = new RideModelRepository(new RideModel());
     $this->requestRide = new RequestRide(
         accountRepository: $accountRepository,
-        rideRepository: $rideRepository
+        rideRepository: $rideRepository,
+        eventDispatcher: $eventDispatcher
     );
 
     $this->acceptRide = new AcceptRide(
         accountRepository: $accountRepository,
-        rideRepository: $rideRepository
+        rideRepository: $rideRepository,
+        eventDispatcher: $eventDispatcher
     );
 
     $positionRepository = new PositionModelRepository(new PositionModel());
@@ -50,7 +54,7 @@ describe('AcceptRide', function () {
             driverId: Uuid::create()
         );
 
-        expect(fn () => $this->acceptRide->execute($acceptRideInput))->toThrow(AccountNotFoundException::class);
+        expect(fn() => $this->acceptRide->execute($acceptRideInput))->toThrow(AccountNotFoundException::class);
     });
 
     test('Deve falhar encontrar tentar aceitar uma corrida com a conta de passeiro', function () {
@@ -62,7 +66,7 @@ describe('AcceptRide', function () {
             driverId: $signupDriverOutput->accountId
         );
 
-        expect(fn () => $this->acceptRide->execute($acceptRideInput))->toThrow(AccountCannotBeAcceptRideException::class);
+        expect(fn() => $this->acceptRide->execute($acceptRideInput))->toThrow(AccountCannotBeAcceptRideException::class);
     });
 
     test('Deve falhar não encontrar a corrida', function () {
@@ -74,7 +78,7 @@ describe('AcceptRide', function () {
             driverId: $signupDriverOutput->accountId
         );
 
-        expect(fn () => $this->acceptRide->execute($acceptRideInput))->toThrow(RideNotFoundException::class);
+        expect(fn() => $this->acceptRide->execute($acceptRideInput))->toThrow(RideNotFoundException::class);
     });
 
     test('Deve falhar ao aceitar uma corrida que ja foi aceita', function () {
@@ -99,7 +103,7 @@ describe('AcceptRide', function () {
         );
         $this->acceptRide->execute($acceptRideInput);
 
-        expect(fn () => $this->acceptRide->execute($acceptRideInput))->toThrow(RideCannotBeAcceptedException::class);
+        expect(fn() => $this->acceptRide->execute($acceptRideInput))->toThrow(RideCannotBeAcceptedException::class);
     });
 
     test('Deve aceitar uma corrida', function () {
