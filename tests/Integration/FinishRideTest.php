@@ -52,7 +52,6 @@ beforeEach(function () {
         eventDispatcher: $eventDispatcher
     );
 
-
     $positionRepository = new PositionModelRepository(new PositionModel());
     $this->updatePosition = new UpdatePosition(
         rideRepository: $rideRepository,

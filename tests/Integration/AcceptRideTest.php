@@ -54,7 +54,7 @@ describe('AcceptRide', function () {
             driverId: Uuid::create()
         );
 
-        expect(fn() => $this->acceptRide->execute($acceptRideInput))->toThrow(AccountNotFoundException::class);
+        expect(fn () => $this->acceptRide->execute($acceptRideInput))->toThrow(AccountNotFoundException::class);
     });
 
     test('Deve falhar encontrar tentar aceitar uma corrida com a conta de passeiro', function () {
@@ -66,7 +66,7 @@ describe('AcceptRide', function () {
             driverId: $signupDriverOutput->accountId
         );
 
-        expect(fn() => $this->acceptRide->execute($acceptRideInput))->toThrow(AccountCannotBeAcceptRideException::class);
+        expect(fn () => $this->acceptRide->execute($acceptRideInput))->toThrow(AccountCannotBeAcceptRideException::class);
     });
 
     test('Deve falhar não encontrar a corrida', function () {
@@ -78,7 +78,7 @@ describe('AcceptRide', function () {
             driverId: $signupDriverOutput->accountId
         );
 
-        expect(fn() => $this->acceptRide->execute($acceptRideInput))->toThrow(RideNotFoundException::class);
+        expect(fn () => $this->acceptRide->execute($acceptRideInput))->toThrow(RideNotFoundException::class);
     });
 
     test('Deve falhar ao aceitar uma corrida que ja foi aceita', function () {
@@ -103,7 +103,7 @@ describe('AcceptRide', function () {
         );
         $this->acceptRide->execute($acceptRideInput);
 
-        expect(fn() => $this->acceptRide->execute($acceptRideInput))->toThrow(RideCannotBeAcceptedException::class);
+        expect(fn () => $this->acceptRide->execute($acceptRideInput))->toThrow(RideCannotBeAcceptedException::class);
     });
 
     test('Deve aceitar uma corrida', function () {

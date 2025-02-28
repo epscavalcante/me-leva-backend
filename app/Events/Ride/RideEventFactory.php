@@ -3,11 +3,11 @@
 namespace App\Events\Ride;
 
 use Core\Domain\Events\Event as DomainEvent;
-use Core\Domain\Events\RideRequestedEvent as RideRequestedDomainEvent;
 use Core\Domain\Events\RideAcceptedEvent as RideAcceptedDomainEvent;
-use Core\Domain\Events\RideStartedEvent as RideStartedDomainEvent;
-use Core\Domain\Events\RidePositionUpdatedEvent as RidePositionUpdatedDomainEvent;
 use Core\Domain\Events\RideFinishedEvent as RideFinishedDomainEvent;
+use Core\Domain\Events\RidePositionUpdatedEvent as RidePositionUpdatedDomainEvent;
+use Core\Domain\Events\RideRequestedEvent as RideRequestedDomainEvent;
+use Core\Domain\Events\RideStartedEvent as RideStartedDomainEvent;
 
 class RideEventFactory
 {

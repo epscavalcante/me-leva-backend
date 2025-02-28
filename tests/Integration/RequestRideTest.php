@@ -18,7 +18,6 @@ use Core\Domain\Exceptions\AccountCannotRequestRideException;
 use Core\Domain\Exceptions\AccountNotFoundException;
 use Core\Domain\ValueObjects\Uuid;
 
-
 beforeEach(function () {
     $this->eventDispatcher = new EventDispatcher();
 });

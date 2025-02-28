@@ -6,7 +6,6 @@ use Core\Domain\Events\EventDispatcher;
 use Core\Domain\Events\RideAcceptedEvent;
 use Core\Domain\Events\RideFinishedEvent;
 use Core\Domain\Events\RidePositionUpdatedEvent;
-use Core\Domain\Events\RideRequestedEvent;
 use Core\Domain\Events\RideStartedEvent;
 use Core\Domain\Factories\RideStatusFactory;
 use Core\Domain\Services\DistanceCalculator;

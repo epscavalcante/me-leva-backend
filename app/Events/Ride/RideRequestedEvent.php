@@ -2,4 +2,6 @@
 
 namespace App\Events\Ride;
 
-class RideRequestedEvent extends RideBaseEvent {}
+class RideRequestedEvent extends RideBaseEvent
+{
+}

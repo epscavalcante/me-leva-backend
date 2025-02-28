@@ -35,7 +35,7 @@ class RideController extends Controller
 
         return response()->json(
             data: [
-                'ride_id' => $requestRideOutput->rideId
+                'ride_id' => $requestRideOutput->rideId,
             ],
             status: Response::HTTP_CREATED);
     }

@@ -2,4 +2,6 @@
 
 namespace App\Events\Ride;
 
-class RidePositionUpdatedEvent extends RideBaseEvent {}
+class RidePositionUpdatedEvent extends RideBaseEvent
+{
+}

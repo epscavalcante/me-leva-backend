@@ -2,10 +2,6 @@
 
 namespace App\Providers;
 
-use App\Events\RideRequestedEvent;
-use App\Events\RideAcceptedEvent;
-use App\Events\RideStartedEvent;
-use App\Events\RideCompletedEvent;
 use App\Events\RideEventFactory;
 use App\Repositories\AccountModelRepository;
 use App\Repositories\PositionModelRepository;
@@ -17,11 +13,11 @@ use Core\Application\UseCases\DTOs\GenerateReceiptInput;
 use Core\Application\UseCases\GenerateReceipt;
 use Core\Domain\Events\Event as DomainEvent;
 use Core\Domain\Events\EventDispatcher;
-use Core\Domain\Events\RideRequestedEvent as RideRequestedDomainEvent;
 use Core\Domain\Events\RideAcceptedEvent as RideAcceptedDomainEvent;
-use Core\Domain\Events\RideStartedEvent as RideStartedDomainEvent;
-use Core\Domain\Events\RidePositionUpdatedEvent as RidePositionUpdatedDomainEvent;
 use Core\Domain\Events\RideFinishedEvent as RideFinishedDomainEvent;
+use Core\Domain\Events\RidePositionUpdatedEvent as RidePositionUpdatedDomainEvent;
+use Core\Domain\Events\RideRequestedEvent as RideRequestedDomainEvent;
+use Core\Domain\Events\RideStartedEvent as RideStartedDomainEvent;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -70,8 +66,8 @@ class AppServiceProvider extends ServiceProvider
         //Model::preventLazyLoading(! $this->app->isProduction());
     }
 
-
-    private function setupRideEvents($eventDispatcher) {
+    private function setupRideEvents($eventDispatcher)
+    {
         $eventsName = [
             RideRequestedDomainEvent::name(),
             RideAcceptedDomainEvent::name(),
@@ -80,12 +76,11 @@ class AppServiceProvider extends ServiceProvider
             RidePositionUpdatedDomainEvent::name(),
         ];
 
-        foreach($eventsName as $eventName) {
+        foreach ($eventsName as $eventName) {
             $eventDispatcher->register(
                 $eventName,
                 fn (DomainEvent $event) => event(RideEventFactory::create($event))
             );
-        };
+        }
     }
-
 }
