@@ -11,6 +11,7 @@ class SignupInput
         public readonly string $phone,
         public readonly bool $isPassenger,
         public readonly bool $isDriver,
+        public readonly string $password,
         // public readonly ?string $carPlate,
     ) {
     }
