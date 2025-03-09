@@ -23,6 +23,8 @@ class AccountModelRepository implements AccountRepository
             'phone' => $account->getPhone(),
             'is_driver' => $account->isDriver(),
             'is_passenger' => $account->isPassenger(),
+            'password' => $account->getPassword(),
+            'password_algorithm' => $account->getPasswordAlgorithm(),
         ]);
     }
 
@@ -44,6 +46,8 @@ class AccountModelRepository implements AccountRepository
             phone: $account->phone,
             isDriver: $account->is_driver,
             isPassenger: $account->is_passenger,
+            password: $account->password,
+            passwordAlgorithm: $account->password_algorithm,
         );
     }
 
@@ -69,6 +73,8 @@ class AccountModelRepository implements AccountRepository
                     phone: $accountModel->phone,
                     isDriver: $accountModel->is_driver,
                     isPassenger: $accountModel->is_passenger,
+                    password: $accountModel->password,
+                    passwordAlgorithm: $accountModel->password_algorithm,
                 );
             },
             array: $accountModels->all()
@@ -84,7 +90,6 @@ class AccountModelRepository implements AccountRepository
         if (! $account) {
             return null;
         }
-
         return new Account(
             accountId: $account->account_id,
             firstName: $account->first_name,
@@ -93,6 +98,8 @@ class AccountModelRepository implements AccountRepository
             phone: $account->phone,
             isDriver: $account->is_driver,
             isPassenger: $account->is_passenger,
+            password: $account->password,
+            passwordAlgorithm: 'plain',//$account->password_algorithm,
         );
     }
 

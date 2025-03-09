@@ -32,6 +32,8 @@ class AccountFactory extends Factory
             'phone' => $this->faker->numerify('###########'),
             'is_passenger' => $this->faker->boolean(),
             'is_driver' => $this->faker->boolean(),
+            'password' => 'password',
+            'password_algorithm' => 'plain'
         ];
     }
 
