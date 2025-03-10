@@ -73,7 +73,7 @@ describe('UpdatePosition', function () {
     });
 
     test('Deve atualizar as posicções de uma corrida', function () {
-        $signupPassengerInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false);
+        $signupPassengerInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false, 'password');
         $signupPassengerOutput = $this->signup->execute($signupPassengerInput);
 
         $requestRideInput = new RequestRideInput(
@@ -85,7 +85,7 @@ describe('UpdatePosition', function () {
         );
         $requestRideOutput = $this->requestRide->execute($requestRideInput);
 
-        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', false, true);
+        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', false, true, 'password');
         $signupDriverOutput = $this->signup->execute($signupDriverInput);
 
         $acceptRideInput = new AcceptRideInput(

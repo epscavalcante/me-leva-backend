@@ -24,6 +24,7 @@ class Signup
             phone: $input->phone,
             isDriver: $input->isDriver,
             isPassenger: $input->isPassenger,
+            password: $input->password
         );
 
         $accountExists = $this->accountRepository->getByEmail($account->getEmail());

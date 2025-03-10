@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
-use App\Events\RideEventFactory;
+use App\Events\Ride\RideEventFactory;
 use App\Repositories\AccountModelRepository;
 use App\Repositories\PositionModelRepository;
 use App\Repositories\RideModelRepository;
+use App\Services\TokenGenerator\MyJwt;
+use App\Services\TokenGenerator\TokenGenerator;
 use Core\Application\Repositories\AccountRepository;
 use Core\Application\Repositories\PositionRepository;
 use Core\Application\Repositories\RideRepository;
@@ -45,6 +47,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(
             EventDispatcher::class,
             EventDispatcher::class
+        );
+
+        $this->app->singleton(
+            TokenGenerator::class,
+            MyJwt::class
         );
     }
 

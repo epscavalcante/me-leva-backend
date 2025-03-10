@@ -3,9 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Account extends Model
+class Account extends Authenticatable
 {
     use HasFactory;
 
@@ -35,5 +35,5 @@ class Account extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['account_id', 'first_name', 'last_name', 'email', 'phone', 'is_driver', 'is_passenger'];
+    protected $fillable = ['account_id', 'first_name', 'last_name', 'email', 'phone', 'is_driver', 'is_passenger', 'password', 'password_algorithm'];
 }

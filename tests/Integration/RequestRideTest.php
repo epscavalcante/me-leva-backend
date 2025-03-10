@@ -46,7 +46,7 @@ describe('RequestRide', function () {
     test('Deve falhar ao solicitar corrida de uma conta que não pode solicitar corridas (não é conta de passageiro)', function () {
         $accountRepository = new AccountModelRepository(new AccountModel());
         $signup = new Signup($accountRepository);
-        $signupInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', false, true);
+        $signupInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', false, true, 'password');
         $signupOutput = $signup->execute($signupInput);
         $rideRepository = new RideModelRepository(new RideModel());
         $requestRide = new RequestRide(
@@ -68,7 +68,7 @@ describe('RequestRide', function () {
     test('Deve solicitar uma corrida', function () {
         $accountRepository = new AccountModelRepository(new AccountModel());
         $signup = new Signup($accountRepository);
-        $signupInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false);
+        $signupInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false, 'password');
         $signupOutput = $signup->execute($signupInput);
         $rideRepository = new RideModelRepository(new RideModel());
 

@@ -25,7 +25,7 @@ class RideController extends Controller
     public function requestRide(Request $request, RequestRide $requesRide)
     {
         $requestRideInput = new RequestRideInput(
-            passengerId: $request->input('passenger_id'),
+            passengerId: auth()->id(),
             fromLatitude: $request->input('from_latitude'),
             fromLongitude: $request->input('from_longitude'),
             toLatitude: $request->input('to_latitude'),
@@ -37,7 +37,8 @@ class RideController extends Controller
             data: [
                 'ride_id' => $requestRideOutput->rideId,
             ],
-            status: Response::HTTP_CREATED);
+            status: Response::HTTP_CREATED
+        );
     }
 
     public function acceptRide(Request $request, string $rideId, AcceptRide $acceptRide)

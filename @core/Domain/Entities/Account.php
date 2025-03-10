@@ -2,8 +2,10 @@
 
 namespace Core\Domain\Entities;
 
+use Core\Domain\Factories\PasswordFactory;
 use Core\Domain\ValueObjects\Email;
 use Core\Domain\ValueObjects\Name;
+use Core\Domain\ValueObjects\Password;
 use Core\Domain\ValueObjects\Phone;
 use Core\Domain\ValueObjects\Uuid;
 
@@ -17,6 +19,8 @@ class Account extends Entity
 
     private Phone $phone;
 
+    private Password $password;
+
     private bool $isDriver;
 
     private bool $isPassenger;
@@ -29,6 +33,8 @@ class Account extends Entity
         string $phone,
         bool $isPassenger,
         bool $isDriver,
+        string $password,
+        string $passwordAlgorithm
     ) {
         $this->name = new Name(firstName: $firstName, lastName: $lastName);
         $this->email = new Email($email);
@@ -36,6 +42,7 @@ class Account extends Entity
         $this->accountId = new Uuid($accountId);
         $this->isPassenger = $isPassenger;
         $this->isDriver = $isDriver;
+        $this->password = PasswordFactory::create($password, $passwordAlgorithm);
     }
 
     public static function create(
@@ -45,6 +52,8 @@ class Account extends Entity
         string $phone,
         bool $isPassenger,
         bool $isDriver,
+        string $password,
+        string $passwordAlgorithm = 'plain',
     ) {
         $accountId = Uuid::create();
 
@@ -55,7 +64,9 @@ class Account extends Entity
             email: $email,
             phone: $phone,
             isPassenger: $isPassenger,
-            isDriver: $isDriver
+            isDriver: $isDriver,
+            password: $password,
+            passwordAlgorithm: $passwordAlgorithm
         );
     }
 
@@ -87,6 +98,16 @@ class Account extends Entity
     public function getPhone(): string
     {
         return $this->phone->getValue();
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password->getValue();
+    }
+
+    public function getPasswordAlgorithm(): string
+    {
+        return $this->password->getAlgorithm();
     }
 
     public function isDriver(): bool

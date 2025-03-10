@@ -58,7 +58,7 @@ describe('AcceptRide', function () {
     });
 
     test('Deve falhar encontrar tentar aceitar uma corrida com a conta de passeiro', function () {
-        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', true, false);
+        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', true, false, 'password');
         $signupDriverOutput = $this->signup->execute($signupDriverInput);
 
         $acceptRideInput = new AcceptRideInput(
@@ -70,7 +70,7 @@ describe('AcceptRide', function () {
     });
 
     test('Deve falhar não encontrar a corrida', function () {
-        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', false, true);
+        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', false, true, 'password');
         $signupDriverOutput = $this->signup->execute($signupDriverInput);
 
         $acceptRideInput = new AcceptRideInput(
@@ -82,7 +82,7 @@ describe('AcceptRide', function () {
     });
 
     test('Deve falhar ao aceitar uma corrida que ja foi aceita', function () {
-        $signupPassengerInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false);
+        $signupPassengerInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false, 'password');
         $signupPassengerOutput = $this->signup->execute($signupPassengerInput);
 
         $requestRideInput = new RequestRideInput(
@@ -94,7 +94,7 @@ describe('AcceptRide', function () {
         );
         $requestRideOutput = $this->requestRide->execute($requestRideInput);
 
-        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', false, true);
+        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', false, true, 'password');
         $signupDriverOutput = $this->signup->execute($signupDriverInput);
 
         $acceptRideInput = new AcceptRideInput(
@@ -107,7 +107,7 @@ describe('AcceptRide', function () {
     });
 
     test('Deve aceitar uma corrida', function () {
-        $signupPassengerInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false);
+        $signupPassengerInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false, 'password');
         $signupPassengerOutput = $this->signup->execute($signupPassengerInput);
 
         $requestRideInput = new RequestRideInput(
@@ -119,7 +119,7 @@ describe('AcceptRide', function () {
         );
         $requestRideOutput = $this->requestRide->execute($requestRideInput);
 
-        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', false, true);
+        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', false, true, 'password');
         $signupDriverOutput = $this->signup->execute($signupDriverInput);
 
         $acceptRideInput = new AcceptRideInput(
