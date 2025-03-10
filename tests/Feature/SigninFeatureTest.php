@@ -1,7 +1,6 @@
 <?php
 
 use App\Account;
-use App\Models\Customer;
 
 describe('Signin Feature Tests', function () {
 
@@ -13,7 +12,7 @@ describe('Signin Feature Tests', function () {
                 'errors' => [
                     'email' => ['The email field is required.'],
                     'password' => ['The password field is required.'],
-                ]
+                ],
             ]);
     });
 
@@ -22,7 +21,7 @@ describe('Signin Feature Tests', function () {
             route('signin'),
             [
                 'email' => 'john.doe',
-                'password' => '12345678'
+                'password' => '12345678',
             ]
         );
         $response->assertStatus(422)
@@ -30,7 +29,7 @@ describe('Signin Feature Tests', function () {
                 'message' => 'The email field must be a valid email address.',
                 'errors' => [
                     'email' => ['The email field must be a valid email address.'],
-                ]
+                ],
             ]);
     });
 
@@ -39,7 +38,7 @@ describe('Signin Feature Tests', function () {
             route('signin'),
             [
                 'email' => 'john.doe@email.com',
-                'password' => '1234'
+                'password' => '1234',
             ]
         );
         $response->assertStatus(422)
@@ -47,7 +46,7 @@ describe('Signin Feature Tests', function () {
                 'message' => 'The password field must be at least 8 characters.',
                 'errors' => [
                     'password' => ['The password field must be at least 8 characters.'],
-                ]
+                ],
             ]);
     });
 
@@ -56,7 +55,7 @@ describe('Signin Feature Tests', function () {
             route('signin'),
             [
                 'email' => 'john.doe@email.com',
-                'password' => '12345678'
+                'password' => '12345678',
             ]
         );
         $response->assertStatus(422)
@@ -71,7 +70,7 @@ describe('Signin Feature Tests', function () {
             route('signin'),
             [
                 'email' => $accountModel->email,
-                'password' => 'password'
+                'password' => 'password',
             ]
         );
         $response->assertStatus(422)

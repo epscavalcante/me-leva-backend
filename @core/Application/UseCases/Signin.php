@@ -6,20 +6,21 @@ use App\Services\TokenGenerator\TokenGenerator;
 use Core\Application\Repositories\AccountRepository;
 use Core\Application\UseCases\DTOs\SigninInput;
 use Core\Application\UseCases\DTOs\SigninOutput;
-use Core\Domain\Factories\PasswordFactory;
 use Core\Domain\Exceptions\InvalidAccountCredentialsException;
+use Core\Domain\Factories\PasswordFactory;
 
 class Signin
 {
     public function __construct(
         private readonly AccountRepository $accountRepository,
         private readonly TokenGenerator $tokenGenerator
-    ) {}
+    ) {
+    }
 
     public function execute(SigninInput $input): SigninOutput
     {
         $account = $this->accountRepository->getByEmail($input->email);
-        if (!$account) {
+        if (! $account) {
             // logar que a conta não encontrada
             throw new InvalidAccountCredentialsException();
         }

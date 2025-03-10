@@ -10,7 +10,7 @@ class PasswordFactory
 {
     public static function create(string $password, string $algorithm): Password
     {
-        return match($algorithm) {
+        return match ($algorithm) {
             PlainPassword::ALGORITHM => new PlainPassword($password),
             MD5Password::ALGORITHM => new MD5Password($password)
         };

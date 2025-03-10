@@ -2,8 +2,6 @@
 
 namespace Core\Domain\ValueObjects;
 
-use Exception;
-
 abstract class Password
 {
     protected string $value;

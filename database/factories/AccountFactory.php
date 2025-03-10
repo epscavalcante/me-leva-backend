@@ -33,7 +33,7 @@ class AccountFactory extends Factory
             'is_passenger' => $this->faker->boolean(),
             'is_driver' => $this->faker->boolean(),
             'password' => 'password',
-            'password_algorithm' => 'plain'
+            'password_algorithm' => 'plain',
         ];
     }
 

@@ -12,7 +12,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationMiddleware
 {
-    public function __construct(private readonly TokenGenerator $tokenGenerator) {}
+    public function __construct(private readonly TokenGenerator $tokenGenerator)
+    {
+    }
 
     /**
      * Handle an incoming request.
@@ -22,8 +24,9 @@ class AuthenticationMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $token = $request->bearerToken();
-        if (!$token)
+        if (! $token) {
             abort(HttpResponse::HTTP_FORBIDDEN, 'Bearer token not provided');
+        }
 
         try {
             $data = $this->tokenGenerator->decode($token);
@@ -31,6 +34,7 @@ class AuthenticationMiddleware
             Auth::setUser(
                 user: $user
             );
+
             return $next($request);
         } catch (\Throwable $th) {
             throw $th;

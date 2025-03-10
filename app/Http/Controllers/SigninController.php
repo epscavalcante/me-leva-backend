@@ -19,8 +19,9 @@ class SigninController extends Controller
             password: $request->validated('password'),
         );
         $signinOutput = $signin->execute($signinInput);
+
         return response()->json([
-            'access_token' => $signinOutput->accessToken
+            'access_token' => $signinOutput->accessToken,
         ]);
     }
 }

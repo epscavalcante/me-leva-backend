@@ -15,7 +15,7 @@ describe('Signin', function () {
         $tokenGenerator = new MyJwt();
         $signin = new Signin(accountRepository: $accountRepository, tokenGenerator: $tokenGenerator);
         $singinInput = new SigninInput(email: 'john.doe@email.com', password: '12345678');
-        expect(fn() => $signin->execute($singinInput))->toThrow(InvalidAccountCredentialsException::class);
+        expect(fn () => $signin->execute($singinInput))->toThrow(InvalidAccountCredentialsException::class);
     });
 
     test('Deve falhar ao logar com a senha incorreta', function () {
@@ -24,7 +24,7 @@ describe('Signin', function () {
         $tokenGenerator = new MyJwt();
         $signin = new Signin(accountRepository: $accountRepository, tokenGenerator: $tokenGenerator);
         $singinInput = new SigninInput(email: $accountModel->email, password: '12345678');
-        expect(fn() => $signin->execute($singinInput))->toThrow(InvalidAccountCredentialsException::class);
+        expect(fn () => $signin->execute($singinInput))->toThrow(InvalidAccountCredentialsException::class);
     });
 
     test('Deve criar um token', function () {
@@ -36,6 +36,5 @@ describe('Signin', function () {
         $signinOutput = $signin->execute($singinInput);
         expect($signinOutput)->toBeInstanceOf(SigninOutput::class);
         expect($signinOutput->accessToken)->toBeString();
-        dd($signinOutput);
     });
 });

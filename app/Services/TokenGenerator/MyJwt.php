@@ -14,20 +14,20 @@ class MyJwt implements TokenGenerator
     public function encode(array $payload): string
     {
         $header = json_encode([
-            "alg" => "HS256",
-            "typ" => "JWT"
+            'alg' => 'HS256',
+            'typ' => 'JWT',
         ]);
 
         $payload = json_encode($payload);
 
-        $header_payload = static::base64url_encode($header) . '.' .
+        $header_payload = static::base64url_encode($header).'.'.
             static::base64url_encode($payload);
 
         $signature = hash_hmac('sha256', $header_payload, $this->secret, true);
 
         return
-            static::base64url_encode($header) . '.' .
-            static::base64url_encode($payload) . '.' .
+            static::base64url_encode($header).'.'.
+            static::base64url_encode($payload).'.'.
             static::base64url_encode($signature);
     }
 
@@ -39,11 +39,12 @@ class MyJwt implements TokenGenerator
 
         $signature = static::base64_decode_url($token[2]);
 
-        $header_payload = $token[0] . '.' . $token[1];
+        $header_payload = $token[0].'.'.$token[1];
 
         if (hash_hmac('sha256', $header_payload, $this->secret, true) !== $signature) {
             throw new \Exception('Invalid signature');
         }
+
         return json_decode($payload, true);
     }
 

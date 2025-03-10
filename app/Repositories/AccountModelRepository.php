@@ -90,6 +90,7 @@ class AccountModelRepository implements AccountRepository
         if (! $account) {
             return null;
         }
+
         return new Account(
             accountId: $account->account_id,
             firstName: $account->first_name,
