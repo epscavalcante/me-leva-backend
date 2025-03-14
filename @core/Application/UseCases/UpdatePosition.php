@@ -17,14 +17,13 @@ class UpdatePosition
         private readonly RideRepository $rideRepository,
         private readonly PositionRepository $positionRepository,
         private readonly EventDispatcher $eventDispatcher
-    ) {
-    }
+    ) {}
 
     public function execute(UpdatePositionInput $input): void
     {
         $ride = $this->rideRepository->getById($input->rideId);
         if (! $ride) {
-            throw new RideNotFoundException();
+            throw new RideNotFoundException;
         }
 
         $position = Position::create($ride->getId(), $input->latitude, $input->longitude);

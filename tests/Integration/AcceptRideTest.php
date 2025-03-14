@@ -23,11 +23,11 @@ use Core\Domain\Exceptions\RideNotFoundException;
 use Core\Domain\ValueObjects\Uuid;
 
 beforeEach(function () {
-    $accountRepository = new AccountModelRepository(new AccountModel());
+    $accountRepository = new AccountModelRepository(new AccountModel);
     $this->signup = new Signup(accountRepository: $accountRepository);
 
-    $eventDispatcher = new EventDispatcher();
-    $rideRepository = new RideModelRepository(new RideModel());
+    $eventDispatcher = new EventDispatcher;
+    $rideRepository = new RideModelRepository(new RideModel);
     $this->requestRide = new RequestRide(
         accountRepository: $accountRepository,
         rideRepository: $rideRepository,
@@ -40,7 +40,7 @@ beforeEach(function () {
         eventDispatcher: $eventDispatcher
     );
 
-    $positionRepository = new PositionModelRepository(new PositionModel());
+    $positionRepository = new PositionModelRepository(new PositionModel);
     $this->getRide = new GetRide(
         rideRepository: $rideRepository,
         positionRepository: $positionRepository

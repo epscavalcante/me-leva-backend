@@ -13,14 +13,13 @@ class StartRide
     public function __construct(
         private readonly RideRepository $rideRepository,
         private readonly EventDispatcher $eventDispatcher
-    ) {
-    }
+    ) {}
 
     public function execute(StartRideInput $input): void
     {
         $ride = $this->rideRepository->getById($input->rideId);
         if (! $ride) {
-            throw new RideNotFoundException();
+            throw new RideNotFoundException;
         }
 
         $ride->register(RideStartedEvent::name(), function ($event) use ($ride) {

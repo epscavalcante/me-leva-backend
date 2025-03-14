@@ -16,7 +16,7 @@ class RequestedRideStatus extends RideStatus
 
     public function request(): void
     {
-        throw new RideCannotBeRequestedException();
+        throw new RideCannotBeRequestedException;
     }
 
     public function accept(): void
@@ -26,11 +26,11 @@ class RequestedRideStatus extends RideStatus
 
     public function start(): void
     {
-        throw new RideCannotBeStartedException();
+        throw new RideCannotBeStartedException;
     }
 
     public function finish(): void
     {
-        throw new RideCannotBeFinishedException();
+        throw new RideCannotBeFinishedException;
     }
 }

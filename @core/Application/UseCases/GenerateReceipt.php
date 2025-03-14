@@ -10,14 +10,13 @@ class GenerateReceipt
 {
     public function __construct(
         private readonly RideRepository $rideRepository,
-    ) {
-    }
+    ) {}
 
     public function execute(GenerateReceiptInput $input): void
     {
         $ride = $this->rideRepository->getById($input->rideId);
         if (! $ride) {
-            throw new RideNotFoundException();
+            throw new RideNotFoundException;
         }
         error_log("Generate receipt for ride {$ride->getId()}");
     }

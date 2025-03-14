@@ -13,8 +13,7 @@ class GetRides
     public function __construct(
         private readonly RideRepository $rideRepository,
         private readonly AccountRepository $accountRepository,
-    ) {
-    }
+    ) {}
 
     public function execute(GetRidesInput $input): GetRidesOutput
     {

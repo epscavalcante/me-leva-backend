@@ -17,23 +17,22 @@ class AcceptRide
         private readonly RideRepository $rideRepository,
         private readonly AccountRepository $accountRepository,
         private readonly EventDispatcher $eventDispatcher,
-    ) {
-    }
+    ) {}
 
     public function execute(AcceptRideInput $input): void
     {
         $account = $this->accountRepository->getById($input->driverId);
         if (! $account) {
-            throw new AccountNotFoundException();
+            throw new AccountNotFoundException;
         }
 
         if (! $account->canAcceptRide()) {
-            throw new AccountCannotBeAcceptRideException();
+            throw new AccountCannotBeAcceptRideException;
         }
 
         $ride = $this->rideRepository->getById($input->rideId);
         if (! $ride) {
-            throw new RideNotFoundException();
+            throw new RideNotFoundException;
         }
 
         $ride->register(RideAcceptedEvent::name(), function ($event) use ($ride) {

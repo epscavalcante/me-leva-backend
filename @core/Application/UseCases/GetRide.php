@@ -14,14 +14,13 @@ class GetRide
     public function __construct(
         private readonly RideRepository $rideRepository,
         private readonly PositionRepository $positionRepository,
-    ) {
-    }
+    ) {}
 
     public function execute(GetRideInput $input): GetRideOutput
     {
         $ride = $this->rideRepository->getById($input->rideId);
         if (! $ride) {
-            throw new RideNotFoundException();
+            throw new RideNotFoundException;
         }
 
         $positions = $this->positionRepository->getPositionsByRideId($ride->getId());

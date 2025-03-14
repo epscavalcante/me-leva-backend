@@ -8,8 +8,7 @@ class RidePositionUpdatedEvent implements Event
 {
     public function __construct(
         private readonly Position $position
-    ) {
-    }
+    ) {}
 
     public static function name(): string
     {

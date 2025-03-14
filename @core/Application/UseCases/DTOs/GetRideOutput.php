@@ -16,6 +16,5 @@ class GetRideOutput
         public readonly string $toLongitude,
         public readonly ?string $driverId = null,
         public readonly array $positions = [],
-    ) {
-    }
+    ) {}
 }

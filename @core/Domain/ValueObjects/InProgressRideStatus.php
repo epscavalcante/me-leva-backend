@@ -16,17 +16,17 @@ class InProgressRideStatus extends RideStatus
 
     public function request(): void
     {
-        throw new RideCannotBeRequestedException();
+        throw new RideCannotBeRequestedException;
     }
 
     public function accept(): void
     {
-        throw new RideCannotBeAcceptedException();
+        throw new RideCannotBeAcceptedException;
     }
 
     public function start(): void
     {
-        throw new RideCannotBeStartedException();
+        throw new RideCannotBeStartedException;
     }
 
     public function finish(): void

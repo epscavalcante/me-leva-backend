@@ -12,6 +12,5 @@ class GetRidesInput
         public readonly ?int $perPage = null,
         public readonly ?string $sortBy = null,
         public readonly ?string $sortDir = null,
-    ) {
-    }
+    ) {}
 }

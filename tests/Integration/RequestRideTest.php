@@ -19,14 +19,14 @@ use Core\Domain\Exceptions\AccountNotFoundException;
 use Core\Domain\ValueObjects\Uuid;
 
 beforeEach(function () {
-    $this->eventDispatcher = new EventDispatcher();
+    $this->eventDispatcher = new EventDispatcher;
 });
 
 describe('RequestRide', function () {
 
     test('Deve falhar ao não encontrar o passageiro', function () {
-        $accountRepository = new AccountModelRepository(new AccountModel());
-        $rideRepository = new RideModelRepository(new RideModel());
+        $accountRepository = new AccountModelRepository(new AccountModel);
+        $rideRepository = new RideModelRepository(new RideModel);
         $requestRide = new RequestRide(
             accountRepository: $accountRepository,
             rideRepository: $rideRepository,
@@ -44,11 +44,11 @@ describe('RequestRide', function () {
     });
 
     test('Deve falhar ao solicitar corrida de uma conta que não pode solicitar corridas (não é conta de passageiro)', function () {
-        $accountRepository = new AccountModelRepository(new AccountModel());
+        $accountRepository = new AccountModelRepository(new AccountModel);
         $signup = new Signup($accountRepository);
         $signupInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', false, true, 'password');
         $signupOutput = $signup->execute($signupInput);
-        $rideRepository = new RideModelRepository(new RideModel());
+        $rideRepository = new RideModelRepository(new RideModel);
         $requestRide = new RequestRide(
             accountRepository: $accountRepository,
             rideRepository: $rideRepository,
@@ -66,11 +66,11 @@ describe('RequestRide', function () {
     });
 
     test('Deve solicitar uma corrida', function () {
-        $accountRepository = new AccountModelRepository(new AccountModel());
+        $accountRepository = new AccountModelRepository(new AccountModel);
         $signup = new Signup($accountRepository);
         $signupInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false, 'password');
         $signupOutput = $signup->execute($signupInput);
-        $rideRepository = new RideModelRepository(new RideModel());
+        $rideRepository = new RideModelRepository(new RideModel);
 
         $requestRide = new RequestRide(
             accountRepository: $accountRepository,
@@ -85,7 +85,7 @@ describe('RequestRide', function () {
             toLongitude: '-48.522234807851476'
         );
         $requestRideOutput = $requestRide->execute($requestRideInput);
-        $positionRepository = new PositionModelRepository(new PositionModel());
+        $positionRepository = new PositionModelRepository(new PositionModel);
         $this->getRide = new GetRide(
             rideRepository: $rideRepository,
             positionRepository: $positionRepository

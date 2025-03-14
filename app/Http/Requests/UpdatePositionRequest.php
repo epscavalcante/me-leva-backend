@@ -22,7 +22,7 @@ class UpdatePositionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //'ride_id' => 'required|uuid',
+            // 'ride_id' => 'required|uuid',
             'latitude' => 'required|string',
             'longitude' => 'required|string',
         ];

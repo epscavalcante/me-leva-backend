@@ -70,7 +70,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->setupRideEvents($eventDispatcher);
 
-        //Model::preventLazyLoading(! $this->app->isProduction());
+        // Model::preventLazyLoading(! $this->app->isProduction());
     }
 
     private function setupRideEvents($eventDispatcher)

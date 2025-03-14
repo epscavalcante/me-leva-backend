@@ -15,8 +15,7 @@ abstract class RideBaseEvent implements ShouldBroadcast
         private readonly string $rideId,
         private readonly string $eventName,
         private readonly array $eventData
-    ) {
-    }
+    ) {}
 
     /**
      * Get the channels the event should broadcast on.

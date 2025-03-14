@@ -6,6 +6,5 @@ class GetRideInput
 {
     public function __construct(
         public readonly string $rideId,
-    ) {
-    }
+    ) {}
 }

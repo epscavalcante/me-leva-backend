@@ -10,8 +10,7 @@ class PositionModelRepository implements PositionRepository
 {
     public function __construct(
         private readonly PositionModel $positionModel
-    ) {
-    }
+    ) {}
 
     /**
      * @param  Position  $position

@@ -18,18 +18,17 @@ class RequestRide
         private readonly RideRepository $rideRepository,
         private readonly AccountRepository $accountRepository,
         private readonly EventDispatcher $eventDispatcher,
-    ) {
-    }
+    ) {}
 
     public function execute(RequestRideInput $input): RequestRideOutput
     {
         $account = $this->accountRepository->getById($input->passengerId);
         if (! $account) {
-            throw new AccountNotFoundException();
+            throw new AccountNotFoundException;
         }
 
         if (! $account->canRequestRide()) {
-            throw new AccountCannotRequestRideException();
+            throw new AccountCannotRequestRideException;
         }
 
         $ride = Ride::create(

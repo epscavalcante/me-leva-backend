@@ -9,8 +9,7 @@ class RideSearchResult implements IRideSearchResult
     public function __construct(
         private readonly ?array $items = [],
         private readonly ?int $total = 0,
-    ) {
-    }
+    ) {}
 
     /**
      * @return Ride[]

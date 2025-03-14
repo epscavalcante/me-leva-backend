@@ -12,8 +12,7 @@ class Signup
 {
     public function __construct(
         private readonly AccountRepository $accountRepository
-    ) {
-    }
+    ) {}
 
     public function execute(SignupInput $input): SignupOutput
     {
@@ -30,7 +29,7 @@ class Signup
         $accountExists = $this->accountRepository->getByEmail($account->getEmail());
 
         if ($accountExists) {
-            throw new AccountAlreadExistsException();
+            throw new AccountAlreadExistsException;
         }
 
         $this->accountRepository->save($account);
