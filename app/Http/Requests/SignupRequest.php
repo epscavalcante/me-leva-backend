@@ -3,8 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Password;
 
-class UpdatePositionRequest extends FormRequest
+class SignupRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +23,16 @@ class UpdatePositionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 'ride_id' => 'required|uuid',
-            'latitude' => 'required|string',
-            'longitude' => 'required|string',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+            'is_passenger' => 'required',
+            'is_driver' => 'required',
+            'password' => [
+                'required',
+                Password::defaults(),
+            ],
         ];
     }
 }

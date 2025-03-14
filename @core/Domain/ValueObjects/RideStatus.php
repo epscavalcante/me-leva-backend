@@ -6,8 +6,7 @@ abstract class RideStatus
 {
     public function __construct(
         private readonly string $value
-    ) {
-    }
+    ) {}
 
     abstract public function request(): void;
 

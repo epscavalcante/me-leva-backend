@@ -8,6 +8,5 @@ class UpdatePositionInput
         public readonly string $rideId,
         public readonly string $latitude,
         public readonly string $longitude,
-    ) {
-    }
+    ) {}
 }

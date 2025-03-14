@@ -10,8 +10,7 @@ class AccountModelRepository implements AccountRepository
 {
     public function __construct(
         private readonly AccountModel $accountModel
-    ) {
-    }
+    ) {}
 
     public function save(object $account): void
     {
@@ -100,7 +99,7 @@ class AccountModelRepository implements AccountRepository
             isDriver: $account->is_driver,
             isPassenger: $account->is_passenger,
             password: $account->password,
-            passwordAlgorithm: 'plain',//$account->password_algorithm,
+            passwordAlgorithm: 'plain',// $account->password_algorithm,
         );
     }
 

@@ -7,6 +7,5 @@ class AcceptRideInput
     public function __construct(
         public readonly string $rideId,
         public readonly string $driverId,
-    ) {
-    }
+    ) {}
 }

@@ -6,6 +6,5 @@ class GetAccountInput
 {
     public function __construct(
         public readonly string $accountId,
-    ) {
-    }
+    ) {}
 }

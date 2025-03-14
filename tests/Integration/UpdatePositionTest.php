@@ -24,11 +24,11 @@ use Core\Domain\Exceptions\RideNotFoundException;
 use Core\Domain\ValueObjects\Uuid;
 
 beforeEach(function () {
-    $accountRepository = new AccountModelRepository(new AccountModel());
+    $accountRepository = new AccountModelRepository(new AccountModel);
     $this->signup = new Signup(accountRepository: $accountRepository);
 
-    $eventDispatcher = new EventDispatcher();
-    $rideRepository = new RideModelRepository(new RideModel());
+    $eventDispatcher = new EventDispatcher;
+    $rideRepository = new RideModelRepository(new RideModel);
     $this->requestRide = new RequestRide(
         accountRepository: $accountRepository,
         rideRepository: $rideRepository,
@@ -50,7 +50,7 @@ beforeEach(function () {
         echo 'Ride has been position updated'.PHP_EOL;
     });
 
-    $positionRepository = new PositionModelRepository(new PositionModel());
+    $positionRepository = new PositionModelRepository(new PositionModel);
     $this->updatePosition = new UpdatePosition(
         rideRepository: $rideRepository,
         positionRepository: $positionRepository,

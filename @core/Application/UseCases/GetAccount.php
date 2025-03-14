@@ -11,14 +11,13 @@ class GetAccount
 {
     public function __construct(
         private readonly AccountRepository $accountRepository
-    ) {
-    }
+    ) {}
 
     public function execute(GetAccountInput $input): GetAccountOutput
     {
         $account = $this->accountRepository->getById($input->accountId);
         if (! $account) {
-            throw new AccountNotFoundException();
+            throw new AccountNotFoundException;
         }
 
         return new GetAccountOutput(

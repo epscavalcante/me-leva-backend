@@ -8,8 +8,7 @@ class RideStartedEvent implements Event
 {
     public function __construct(
         private readonly Ride $ride
-    ) {
-    }
+    ) {}
 
     public static function name(): string
     {

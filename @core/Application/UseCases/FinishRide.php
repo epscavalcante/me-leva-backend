@@ -15,14 +15,13 @@ class FinishRide
         private readonly RideRepository $rideRepository,
         private readonly PositionRepository $positionRepository,
         private readonly EventDispatcher $eventDispatcher,
-    ) {
-    }
+    ) {}
 
     public function execute(FinishRideInput $input): void
     {
         $ride = $this->rideRepository->getById($input->rideId);
         if (! $ride) {
-            throw new RideNotFoundException();
+            throw new RideNotFoundException;
         }
 
         $ride->register(RideFinishedEvent::name(), function ($event) use ($ride) {

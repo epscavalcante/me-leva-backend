@@ -11,8 +11,7 @@ class RideModelRepository implements RideRepository
 {
     public function __construct(
         private readonly RideModel $rideModel
-    ) {
-    }
+    ) {}
 
     public function getRides(?int $page = 1, ?int $perPage = 10, ?string $sortBy = null, ?string $sortDir = null, ?string $status = null): RideSearchResult
     {

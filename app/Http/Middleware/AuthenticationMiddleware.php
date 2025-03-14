@@ -12,9 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthenticationMiddleware
 {
-    public function __construct(private readonly TokenGenerator $tokenGenerator)
-    {
-    }
+    public function __construct(private readonly TokenGenerator $tokenGenerator) {}
 
     /**
      * Handle an incoming request.

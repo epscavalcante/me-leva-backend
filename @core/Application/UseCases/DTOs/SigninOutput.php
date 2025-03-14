@@ -6,7 +6,6 @@ class SigninOutput
 {
     public function __construct(
         public readonly string $accessToken,
-        //public readonly string $expiresIn,
-    ) {
-    }
+        // public readonly string $expiresIn,
+    ) {}
 }

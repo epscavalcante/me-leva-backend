@@ -10,8 +10,8 @@ use Core\Application\UseCases\DTOs\GetRidesOutput;
 use Core\Application\UseCases\GetRides;
 
 beforeEach(function () {
-    $rideRepository = new RideModelRepository(new RideModel());
-    $accountRepository = new AccountModelRepository(new AccountModel());
+    $rideRepository = new RideModelRepository(new RideModel);
+    $accountRepository = new AccountModelRepository(new AccountModel);
     $this->getRides = new GetRides(
         rideRepository: $rideRepository,
         accountRepository: $accountRepository
@@ -21,7 +21,7 @@ beforeEach(function () {
 describe('Get Rides', function () {
 
     test('Deve retornar uma lista vazia', function () {
-        $input = new GetRidesInput();
+        $input = new GetRidesInput;
         $output = $this->getRides->execute($input);
         expect($output)->toBeInstanceOf(GetRidesOutput::class);
     });

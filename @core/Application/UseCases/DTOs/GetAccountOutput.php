@@ -13,6 +13,5 @@ class GetAccountOutput
         public readonly bool $isPassenger,
         public readonly bool $isDriver,
         // public readonly ?string $carPlate,
-    ) {
-    }
+    ) {}
 }

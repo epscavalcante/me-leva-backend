@@ -14,14 +14,14 @@ describe('Signup', function () {
 
     test('Deve falhar ao criar uma conta com email existente', function () {
         $accountModel = AccountModel::factory()->passenger()->create();
-        $accountRepository = new AccountModelRepository(accountModel: new AccountModel());
+        $accountRepository = new AccountModelRepository(accountModel: new AccountModel);
         $signup = new Signup(accountRepository: $accountRepository);
         $singupInput = new SignupInput('John', 'Doe', $accountModel->email, '00000000000', true, false, 'password');
         expect(fn () => $signup->execute($singupInput))->toThrow(AccountAlreadExistsException::class);
     });
 
     test('Deve criar um passageiro', function () {
-        $accountRepository = new AccountModelRepository(accountModel: new AccountModel());
+        $accountRepository = new AccountModelRepository(accountModel: new AccountModel);
         $signup = new Signup(accountRepository: $accountRepository);
         $singupInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false, 'password');
         $singupOutput = $signup->execute($singupInput);
@@ -41,7 +41,7 @@ describe('Signup', function () {
     });
 
     test('Deve criar um motorista', function () {
-        $accountRepository = new AccountModelRepository(accountModel: new AccountModel());
+        $accountRepository = new AccountModelRepository(accountModel: new AccountModel);
         $signup = new Signup(accountRepository: $accountRepository);
         $singupInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', false, true, 'password');
         $singupOutput = $signup->execute($singupInput);

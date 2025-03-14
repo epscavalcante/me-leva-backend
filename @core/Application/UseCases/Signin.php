@@ -14,23 +14,22 @@ class Signin
     public function __construct(
         private readonly AccountRepository $accountRepository,
         private readonly TokenGenerator $tokenGenerator
-    ) {
-    }
+    ) {}
 
     public function execute(SigninInput $input): SigninOutput
     {
         $account = $this->accountRepository->getByEmail($input->email);
         if (! $account) {
             // logar que a conta não encontrada
-            throw new InvalidAccountCredentialsException();
+            throw new InvalidAccountCredentialsException;
         }
 
         $passwordHashed = PasswordFactory::create($input->password, $account->getPasswordAlgorithm());
         if (! $passwordHashed->check($account->getPassword())) {
-            throw new InvalidAccountCredentialsException();
+            throw new InvalidAccountCredentialsException;
         }
 
-        //gerar token
+        // gerar token
         // salvar tokens
         $tokenData = [
             'account_id' => $account->getId(),
