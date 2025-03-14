@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SignupRequest;
 use Core\Application\UseCases\DTOs\SignupInput;
 use Core\Application\UseCases\Signup;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class SignupController extends Controller
@@ -12,16 +12,17 @@ class SignupController extends Controller
     /**
      * Handle the incoming request.
      */
-    public function __invoke(Request $request, Signup $signup)
+    public function __invoke(SignupRequest $request, Signup $signup)
     {
         // validar usando o form_request
         $input = new SignupInput(
-            firstName: $request->input('first_name'),
-            lastName: $request->input('last_name'),
-            email: $request->input('email'),
-            phone: $request->input('phone'),
-            isDriver: $request->input('is_driver'),
-            isPassenger: $request->input('is_passenger'),
+            firstName: $request->validated('first_name'),
+            lastName: $request->validated('last_name'),
+            email: $request->validated('email'),
+            phone: $request->validated('phone'),
+            isDriver: $request->validated('is_driver'),
+            isPassenger: $request->validated('is_passenger'),
+            password: $request->validated('password')
         );
         $output = $signup->execute($input);
 
