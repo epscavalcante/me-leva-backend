@@ -10,6 +10,7 @@
         "laravel/octane": "^2.4",
         "laravel/reverb": "@beta",
         "laravel/tinker": "^2.9",
+        "php-amqplib/php-amqplib": "^3.7",
         "symfony/validator": "^7.0"
     },
     "require-dev": {
