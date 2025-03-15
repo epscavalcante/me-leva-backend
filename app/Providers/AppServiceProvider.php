@@ -6,6 +6,8 @@ use App\Events\Ride\RideEventFactory;
 use App\Repositories\AccountModelRepository;
 use App\Repositories\PositionModelRepository;
 use App\Repositories\RideModelRepository;
+use App\Services\MessageBroker\MessageBroker;
+use App\Services\MessageBroker\RabbitMQMessageBroker;
 use App\Services\TokenGenerator\MyJwt;
 use App\Services\TokenGenerator\TokenGenerator;
 use Core\Application\Repositories\AccountRepository;
@@ -52,6 +54,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(
             TokenGenerator::class,
             MyJwt::class
+        );
+
+        $this->app->singleton(
+            abstract: MessageBroker::class,
+            concrete: RabbitMQMessageBroker::class
         );
     }
 
