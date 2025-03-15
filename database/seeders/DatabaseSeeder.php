@@ -15,12 +15,12 @@ class DatabaseSeeder extends Seeder
         AccountModel::factory()->passenger()->create([
             'first_name' => 'Passenger',
             'last_name' => 'Account',
-            'email' => 'passenger.account@example.com'
+            'email' => 'passenger.account@example.com',
         ]);
         AccountModel::factory()->driver()->create([
             'first_name' => 'Driver',
             'last_name' => 'Account',
-            'email' => 'driver.account@example.com'
+            'email' => 'driver.account@example.com',
         ]);
     }
 }
