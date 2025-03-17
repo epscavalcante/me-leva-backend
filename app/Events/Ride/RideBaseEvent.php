@@ -32,11 +32,21 @@ abstract class RideBaseEvent implements ShouldBroadcast
      */
     public function broadcastAs(): string
     {
-        return $this->eventName;
+        return $this->getEventName();
     }
 
     public function broadcastWith(): array
     {
         return $this->eventData;
+    }
+
+    public function getResourceId(): string
+    {
+        return $this->rideId;
+    }
+
+    public function getEventName(): string
+    {
+        return $this->eventName;
     }
 }
