@@ -41,9 +41,9 @@ class RideController extends Controller
         );
     }
 
-    public function acceptRide(Request $request, string $rideId, AcceptRide $acceptRide)
+    public function acceptRide(string $rideId, AcceptRide $acceptRide)
     {
-        $driverId = $request->input('driver_id');
+        $driverId = auth()->id();
         $acceptRideinput = new AcceptRideInput($rideId, $driverId);
         $acceptRide->execute($acceptRideinput);
 
