@@ -2,10 +2,10 @@
 
 namespace Core\Application\UseCases;
 
+use App\Services\MessageBroker\MessageBroker;
 use Core\Application\Repositories\AccountRepository;
 use Core\Application\Repositories\RideRepository;
 use Core\Application\UseCases\DTOs\AcceptRideInput;
-use Core\Domain\Events\EventDispatcher;
 use Core\Domain\Events\RideAcceptedEvent;
 use Core\Domain\Exceptions\AccountCannotBeAcceptRideException;
 use Core\Domain\Exceptions\AccountNotFoundException;
@@ -16,7 +16,7 @@ class AcceptRide
     public function __construct(
         private readonly RideRepository $rideRepository,
         private readonly AccountRepository $accountRepository,
-        private readonly EventDispatcher $eventDispatcher,
+        private readonly MessageBroker $messageBroker,
     ) {}
 
     public function execute(AcceptRideInput $input): void
@@ -35,9 +35,9 @@ class AcceptRide
             throw new RideNotFoundException;
         }
 
-        $ride->register(RideAcceptedEvent::name(), function ($event) use ($ride) {
+        $ride->register(RideAcceptedEvent::name(), function (RideAcceptedEvent $event) use ($ride) {
             $this->rideRepository->update($ride);
-            $this->eventDispatcher->dispatch($event);
+            $this->messageBroker->publish($event->getName(), $event->getData());
         });
 
         $ride->accept($account->getId());
