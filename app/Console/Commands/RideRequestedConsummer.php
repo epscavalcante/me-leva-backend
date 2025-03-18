@@ -30,7 +30,7 @@ class RideRequestedConsummer extends Command
     public function handle(MessageBroker $messageBroker, AcceptRide $acceptRide)
     {
         $availableDriver = Account::where('is_driver', true)->inRandomOrder()->firstOrCreate();
-        if (!$availableDriver) {
+        if (! $availableDriver) {
             $availableDriver = Account::factory()->driver()->create();
         }
 

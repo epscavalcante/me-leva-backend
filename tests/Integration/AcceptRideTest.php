@@ -39,7 +39,7 @@ describe('AcceptRide', function () {
             messageBroker: $messageBroker
         );
 
-        expect(fn() => $acceptRide->execute($acceptRideInput))->toThrow(AccountNotFoundException::class);
+        expect(fn () => $acceptRide->execute($acceptRideInput))->toThrow(AccountNotFoundException::class);
     });
 
     test('Deve falhar encontrar tentar aceitar uma corrida com a conta de passeiro', function () {
@@ -58,7 +58,7 @@ describe('AcceptRide', function () {
             messageBroker: $messageBroker
         );
 
-        expect(fn() => $acceptRide->execute($acceptRideInput))->toThrow(AccountCannotBeAcceptRideException::class);
+        expect(fn () => $acceptRide->execute($acceptRideInput))->toThrow(AccountCannotBeAcceptRideException::class);
     });
 
     test('Deve falhar não encontrar a corrida', function () {
@@ -75,7 +75,7 @@ describe('AcceptRide', function () {
             rideRepository: $this->rideRepository,
             messageBroker: $messageBroker
         );
-        expect(fn() => $acceptRide->execute($acceptRideInput))->toThrow(RideNotFoundException::class);
+        expect(fn () => $acceptRide->execute($acceptRideInput))->toThrow(RideNotFoundException::class);
     });
 
     test('Deve falhar ao aceitar uma corrida que ja foi aceita', function () {
@@ -97,7 +97,7 @@ describe('AcceptRide', function () {
             messageBroker: $messageBroker
         );
 
-        expect(fn() => $acceptRide->execute($acceptRideInput))->toThrow(RideCannotBeAcceptedException::class);
+        expect(fn () => $acceptRide->execute($acceptRideInput))->toThrow(RideCannotBeAcceptedException::class);
     });
 
     test('Deve aceitar uma corrida', function () {
@@ -123,7 +123,7 @@ describe('AcceptRide', function () {
         $acceptRide->execute($acceptRideInput);
 
         $getRideInput = new GetRideInput($rideModel->ride_id);
-        $positionRepository = new PositionModelRepository(new PositionModel());
+        $positionRepository = new PositionModelRepository(new PositionModel);
         $getRide = new GetRide(
             rideRepository: $this->rideRepository,
             positionRepository: $positionRepository

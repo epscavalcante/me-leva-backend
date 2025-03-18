@@ -2,30 +2,18 @@
 
 use App\Account as AccountModel;
 use App\Position as PositionModel;
-use App\Repositories\AccountModelRepository;
 use App\Repositories\PositionModelRepository;
 use App\Repositories\RideModelRepository;
 use App\Ride as RideModel;
 use App\Services\MessageBroker\MessageBroker;
-use Core\Application\UseCases\AcceptRide;
-use Core\Application\UseCases\DTOs\AcceptRideInput;
 use Core\Application\UseCases\DTOs\FinishRideInput;
-use Core\Application\UseCases\DTOs\GenerateReceiptInput;
 use Core\Application\UseCases\DTOs\GetRideInput;
 use Core\Application\UseCases\DTOs\GetRideOutput;
-use Core\Application\UseCases\DTOs\RequestRideInput;
-use Core\Application\UseCases\DTOs\SignupInput;
-use Core\Application\UseCases\DTOs\StartRideInput;
 use Core\Application\UseCases\DTOs\UpdatePositionInput;
 use Core\Application\UseCases\FinishRide;
-use Core\Application\UseCases\GenerateReceipt;
 use Core\Application\UseCases\GetRide;
-use Core\Application\UseCases\RequestRide;
-use Core\Application\UseCases\Signup;
-use Core\Application\UseCases\StartRide;
 use Core\Application\UseCases\UpdatePosition;
 use Core\Domain\Events\EventDispatcher;
-use Core\Domain\Events\RideFinishedEvent;
 use Core\Domain\Exceptions\RideCannotBeFinishedException;
 use Core\Domain\Exceptions\RideNotFoundException;
 use Core\Domain\ValueObjects\Uuid;
@@ -33,7 +21,7 @@ use Core\Domain\ValueObjects\Uuid;
 beforeEach(function () {
     $this->rideRepository = new RideModelRepository(new RideModel);
     $this->positionRepository = new PositionModelRepository(new PositionModel);
-    $eventDispatcher = new EventDispatcher();
+    $eventDispatcher = new EventDispatcher;
     $this->finishRide = new FinishRide(
         rideRepository: $this->rideRepository,
         positionRepository: $this->positionRepository,
@@ -66,7 +54,7 @@ describe('FinishRide', function () {
         $rideModel = RideModel::factory()->started()
             ->create([
                 'driver_id' => $driverModel->account_id,
-                'passenger_id' => $passengerModel->account_id
+                'passenger_id' => $passengerModel->account_id,
             ]);
 
         $messageBroker = Mockery::mock(MessageBroker::class);
