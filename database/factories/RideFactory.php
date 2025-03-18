@@ -52,6 +52,14 @@ class RideFactory extends Factory
         ]);
     }
 
+    public function started(?string $driverId = null): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => 'in_progress',
+            'driver_id' => $driverId,
+        ]);
+    }
+
     public function finished(): static
     {
         return $this->state(fn (array $attributes) => [
