@@ -6,16 +6,12 @@ use App\Repositories\AccountModelRepository;
 use App\Repositories\PositionModelRepository;
 use App\Repositories\RideModelRepository;
 use App\Ride as RideModel;
+use App\Services\MessageBroker\MessageBroker;
 use Core\Application\UseCases\AcceptRide;
 use Core\Application\UseCases\DTOs\AcceptRideInput;
 use Core\Application\UseCases\DTOs\GetRideInput;
 use Core\Application\UseCases\DTOs\GetRideOutput;
-use Core\Application\UseCases\DTOs\RequestRideInput;
-use Core\Application\UseCases\DTOs\SignupInput;
 use Core\Application\UseCases\GetRide;
-use Core\Application\UseCases\RequestRide;
-use Core\Application\UseCases\Signup;
-use Core\Domain\Events\EventDispatcher;
 use Core\Domain\Exceptions\AccountCannotBeAcceptRideException;
 use Core\Domain\Exceptions\AccountNotFoundException;
 use Core\Domain\Exceptions\RideCannotBeAcceptedException;
@@ -23,28 +19,9 @@ use Core\Domain\Exceptions\RideNotFoundException;
 use Core\Domain\ValueObjects\Uuid;
 
 beforeEach(function () {
-    $accountRepository = new AccountModelRepository(new AccountModel);
-    $this->signup = new Signup(accountRepository: $accountRepository);
-
-    $eventDispatcher = new EventDispatcher;
-    $rideRepository = new RideModelRepository(new RideModel);
-    $this->requestRide = new RequestRide(
-        accountRepository: $accountRepository,
-        rideRepository: $rideRepository,
-        eventDispatcher: $eventDispatcher
-    );
-
-    $this->acceptRide = new AcceptRide(
-        accountRepository: $accountRepository,
-        rideRepository: $rideRepository,
-        eventDispatcher: $eventDispatcher
-    );
-
-    $positionRepository = new PositionModelRepository(new PositionModel);
-    $this->getRide = new GetRide(
-        rideRepository: $rideRepository,
-        positionRepository: $positionRepository
-    );
+    /** @var RideModelRepository */
+    $this->rideRepository = new RideModelRepository(new RideModel);
+    $this->accountRepository = new AccountModelRepository(new AccountModel);
 });
 
 describe('AcceptRide', function () {
@@ -54,84 +31,106 @@ describe('AcceptRide', function () {
             driverId: Uuid::create()
         );
 
-        expect(fn () => $this->acceptRide->execute($acceptRideInput))->toThrow(AccountNotFoundException::class);
+        $messageBroker = Mockery::mock(MessageBroker::class);
+        $messageBroker->shouldNotReceive('publish');
+        $acceptRide = new AcceptRide(
+            accountRepository: $this->accountRepository,
+            rideRepository: $this->rideRepository,
+            messageBroker: $messageBroker
+        );
+
+        expect(fn () => $acceptRide->execute($acceptRideInput))->toThrow(AccountNotFoundException::class);
     });
 
     test('Deve falhar encontrar tentar aceitar uma corrida com a conta de passeiro', function () {
-        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', true, false, 'password');
-        $signupDriverOutput = $this->signup->execute($signupDriverInput);
+        $accountModel = AccountModel::factory()->passenger()->create();
 
         $acceptRideInput = new AcceptRideInput(
             rideId: Uuid::create(),
-            driverId: $signupDriverOutput->accountId
+            driverId: $accountModel->account_id
         );
 
-        expect(fn () => $this->acceptRide->execute($acceptRideInput))->toThrow(AccountCannotBeAcceptRideException::class);
+        $messageBroker = Mockery::mock(MessageBroker::class);
+        $messageBroker->shouldNotReceive('publish');
+        $acceptRide = new AcceptRide(
+            accountRepository: $this->accountRepository,
+            rideRepository: $this->rideRepository,
+            messageBroker: $messageBroker
+        );
+
+        expect(fn () => $acceptRide->execute($acceptRideInput))->toThrow(AccountCannotBeAcceptRideException::class);
     });
 
     test('Deve falhar não encontrar a corrida', function () {
-        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', false, true, 'password');
-        $signupDriverOutput = $this->signup->execute($signupDriverInput);
+        $driverModel = AccountModel::factory()->driver()->create();
 
         $acceptRideInput = new AcceptRideInput(
             rideId: Uuid::create(),
-            driverId: $signupDriverOutput->accountId
+            driverId: $driverModel->account_id
         );
-
-        expect(fn () => $this->acceptRide->execute($acceptRideInput))->toThrow(RideNotFoundException::class);
+        $messageBroker = Mockery::mock(MessageBroker::class);
+        $messageBroker->shouldNotReceive('publish');
+        $acceptRide = new AcceptRide(
+            accountRepository: $this->accountRepository,
+            rideRepository: $this->rideRepository,
+            messageBroker: $messageBroker
+        );
+        expect(fn () => $acceptRide->execute($acceptRideInput))->toThrow(RideNotFoundException::class);
     });
 
     test('Deve falhar ao aceitar uma corrida que ja foi aceita', function () {
-        $signupPassengerInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false, 'password');
-        $signupPassengerOutput = $this->signup->execute($signupPassengerInput);
-
-        $requestRideInput = new RequestRideInput(
-            passengerId: $signupPassengerOutput->accountId,
-            fromLatitude: '-27.584905257808835',
-            fromLongitude: '-48.545022195325124',
-            toLatitude: '-27.496887588317275',
-            toLongitude: '-48.522234807851476'
-        );
-        $requestRideOutput = $this->requestRide->execute($requestRideInput);
-
-        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', false, true, 'password');
-        $signupDriverOutput = $this->signup->execute($signupDriverInput);
+        $passenger = AccountModel::factory()->passenger()->create();
+        $driver = AccountModel::factory()->driver()->create();
+        $ride = RideModel::factory()->accepted($driver->account_id)
+            ->create(['passenger_id' => $passenger->account_id]);
 
         $acceptRideInput = new AcceptRideInput(
-            rideId: $requestRideOutput->rideId,
-            driverId: $signupDriverOutput->accountId
+            rideId: $ride->ride_id,
+            driverId: $driver->account_id
         );
-        $this->acceptRide->execute($acceptRideInput);
 
-        expect(fn () => $this->acceptRide->execute($acceptRideInput))->toThrow(RideCannotBeAcceptedException::class);
+        $messageBroker = Mockery::mock(MessageBroker::class);
+        $messageBroker->shouldNotReceive('publish');
+        $acceptRide = new AcceptRide(
+            accountRepository: $this->accountRepository,
+            rideRepository: $this->rideRepository,
+            messageBroker: $messageBroker
+        );
+
+        expect(fn () => $acceptRide->execute($acceptRideInput))->toThrow(RideCannotBeAcceptedException::class);
     });
 
     test('Deve aceitar uma corrida', function () {
-        $signupPassengerInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false, 'password');
-        $signupPassengerOutput = $this->signup->execute($signupPassengerInput);
-
-        $requestRideInput = new RequestRideInput(
-            passengerId: $signupPassengerOutput->accountId,
-            fromLatitude: '-27.584905257808835',
-            fromLongitude: '-48.545022195325124',
-            toLatitude: '-27.496887588317275',
-            toLongitude: '-48.522234807851476'
-        );
-        $requestRideOutput = $this->requestRide->execute($requestRideInput);
-
-        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', false, true, 'password');
-        $signupDriverOutput = $this->signup->execute($signupDriverInput);
+        $passengerModel = AccountModel::factory()->passenger()->create();
+        $rideModel = RideModel::factory()
+            ->requested()
+            ->create(['passenger_id' => $passengerModel->account_id]);
+        $driverModel = AccountModel::factory()->driver()->create();
 
         $acceptRideInput = new AcceptRideInput(
-            rideId: $requestRideOutput->rideId,
-            driverId: $signupDriverOutput->accountId
+            rideId: $rideModel->ride_id,
+            driverId: $driverModel->account_id
         );
-        $this->acceptRide->execute($acceptRideInput);
+        $messageBroker = Mockery::mock(MessageBroker::class);
+        $messageBroker->shouldReceive('publish')
+            ->once()
+            ->andReturn();
+        $acceptRide = new AcceptRide(
+            accountRepository: $this->accountRepository,
+            rideRepository: $this->rideRepository,
+            messageBroker: $messageBroker
+        );
+        $acceptRide->execute($acceptRideInput);
 
-        $getRideInput = new GetRideInput($requestRideOutput->rideId);
-        $getRideOutput = $this->getRide->execute($getRideInput);
+        $getRideInput = new GetRideInput($rideModel->ride_id);
+        $positionRepository = new PositionModelRepository(new PositionModel);
+        $getRide = new GetRide(
+            rideRepository: $this->rideRepository,
+            positionRepository: $positionRepository
+        );
+        $getRideOutput = $getRide->execute($getRideInput);
         expect($getRideOutput)->toBeInstanceOf(GetRideOutput::class);
-        expect($getRideOutput->driverId)->toBe($signupDriverOutput->accountId);
+        expect($getRideOutput->driverId)->toBe($driverModel->account_id);
         expect($getRideOutput->status)->toBe('accepted');
     });
 });

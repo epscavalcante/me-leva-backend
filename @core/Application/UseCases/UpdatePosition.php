@@ -2,12 +2,11 @@
 
 namespace Core\Application\UseCases;
 
+use App\Services\MessageBroker\MessageBroker;
 use Core\Application\Repositories\PositionRepository;
 use Core\Application\Repositories\RideRepository;
 use Core\Application\UseCases\DTOs\UpdatePositionInput;
 use Core\Domain\Entities\Position;
-use Core\Domain\Events\Event;
-use Core\Domain\Events\EventDispatcher;
 use Core\Domain\Events\RidePositionUpdatedEvent;
 use Core\Domain\Exceptions\RideNotFoundException;
 
@@ -16,7 +15,7 @@ class UpdatePosition
     public function __construct(
         private readonly RideRepository $rideRepository,
         private readonly PositionRepository $positionRepository,
-        private readonly EventDispatcher $eventDispatcher
+        private readonly MessageBroker $messageBroker
     ) {}
 
     public function execute(UpdatePositionInput $input): void
@@ -28,10 +27,10 @@ class UpdatePosition
 
         $position = Position::create($ride->getId(), $input->latitude, $input->longitude);
 
-        $ride->register(RidePositionUpdatedEvent::name(), function (Event $event) use ($position) {
+        $ride->register(RidePositionUpdatedEvent::name(), function (RidePositionUpdatedEvent $event) use ($position) {
             $this->positionRepository->save($position);
 
-            $this->eventDispatcher->dispatch($event);
+            $this->messageBroker->publish($event->getName(), $event->getData());
         });
 
         $ride->updatePosition($position);

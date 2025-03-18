@@ -6,15 +6,10 @@ use App\Repositories\AccountModelRepository;
 use App\Repositories\PositionModelRepository;
 use App\Repositories\RideModelRepository;
 use App\Ride as RideModel;
-use Core\Application\UseCases\AcceptRide;
-use Core\Application\UseCases\DTOs\AcceptRideInput;
 use Core\Application\UseCases\DTOs\GetRideInput;
 use Core\Application\UseCases\DTOs\GetRideOutput;
-use Core\Application\UseCases\DTOs\RequestRideInput;
-use Core\Application\UseCases\DTOs\SignupInput;
 use Core\Application\UseCases\DTOs\StartRideInput;
 use Core\Application\UseCases\GetRide;
-use Core\Application\UseCases\RequestRide;
 use Core\Application\UseCases\Signup;
 use Core\Application\UseCases\StartRide;
 use Core\Domain\Events\EventDispatcher;
@@ -28,18 +23,6 @@ beforeEach(function () {
 
     $eventDispatcher = new EventDispatcher;
     $rideRepository = new RideModelRepository(new RideModel);
-    $this->requestRide = new RequestRide(
-        accountRepository: $accountRepository,
-        rideRepository: $rideRepository,
-        eventDispatcher: $eventDispatcher
-    );
-
-    $this->acceptRide = new AcceptRide(
-        accountRepository: $accountRepository,
-        rideRepository: $rideRepository,
-        eventDispatcher: $eventDispatcher
-    );
-
     $this->startRide = new StartRide(
         rideRepository: $rideRepository,
         eventDispatcher: $eventDispatcher
@@ -62,48 +45,24 @@ describe('StartRide', function () {
     });
 
     test('Deve falhar ao iniciar uma corrida que não foi aceita', function () {
-        $signupPassengerInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false, 'password');
-        $signupPassengerOutput = $this->signup->execute($signupPassengerInput);
+        $passengerModel = AccountModel::factory()->passenger()->create();
+        $rideModel = RideModel::factory()->requested()
+            ->create(['passenger_id' => $passengerModel->account_id]);
 
-        $requestRideInput = new RequestRideInput(
-            passengerId: $signupPassengerOutput->accountId,
-            fromLatitude: '-27.584905257808835',
-            fromLongitude: '-48.545022195325124',
-            toLatitude: '-27.496887588317275',
-            toLongitude: '-48.522234807851476'
-        );
-        $requestRideOutput = $this->requestRide->execute($requestRideInput);
-
-        $startRideInput = new StartRideInput($requestRideOutput->rideId);
+        $startRideInput = new StartRideInput($rideModel->ride_id);
         expect(fn () => $this->startRide->execute($startRideInput))->toThrow(RideCannotBeStartedException::class);
     });
 
     test('Deve iniciar uma corrida', function () {
-        $signupPassengerInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false, 'password');
-        $signupPassengerOutput = $this->signup->execute($signupPassengerInput);
+        $passengerModel = AccountModel::factory()->passenger()->create();
+        $driverModel = AccountModel::factory()->driver()->create();
+        $rideModel = RideModel::factory()->accepted($driverModel->account_id)
+            ->create(['passenger_id' => $passengerModel->account_id]);
 
-        $requestRideInput = new RequestRideInput(
-            passengerId: $signupPassengerOutput->accountId,
-            fromLatitude: '-27.584905257808835',
-            fromLongitude: '-48.545022195325124',
-            toLatitude: '-27.496887588317275',
-            toLongitude: '-48.522234807851476'
-        );
-        $requestRideOutput = $this->requestRide->execute($requestRideInput);
-
-        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', false, true, 'password');
-        $signupDriverOutput = $this->signup->execute($signupDriverInput);
-
-        $acceptRideInput = new AcceptRideInput(
-            rideId: $requestRideOutput->rideId,
-            driverId: $signupDriverOutput->accountId
-        );
-        $this->acceptRide->execute($acceptRideInput);
-
-        $startRideInput = new StartRideInput($requestRideOutput->rideId);
+        $startRideInput = new StartRideInput($rideModel->ride_id);
         $this->startRide->execute($startRideInput);
 
-        $getRideInput = new GetRideInput($requestRideOutput->rideId);
+        $getRideInput = new GetRideInput($rideModel->ride_id);
         $getRideOutput = $this->getRide->execute($getRideInput);
 
         expect($getRideOutput)->toBeInstanceOf(GetRideOutput::class);

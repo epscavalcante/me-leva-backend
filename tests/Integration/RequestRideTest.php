@@ -6,6 +6,7 @@ use App\Repositories\AccountModelRepository;
 use App\Repositories\PositionModelRepository;
 use App\Repositories\RideModelRepository;
 use App\Ride as RideModel;
+use App\Services\MessageBroker\MessageBroker;
 use Core\Application\UseCases\DTOs\GetRideInput;
 use Core\Application\UseCases\DTOs\GetRideOutput;
 use Core\Application\UseCases\DTOs\RequestRideInput;
@@ -13,24 +14,22 @@ use Core\Application\UseCases\DTOs\SignupInput;
 use Core\Application\UseCases\GetRide;
 use Core\Application\UseCases\RequestRide;
 use Core\Application\UseCases\Signup;
-use Core\Domain\Events\EventDispatcher;
 use Core\Domain\Exceptions\AccountCannotRequestRideException;
 use Core\Domain\Exceptions\AccountNotFoundException;
 use Core\Domain\ValueObjects\Uuid;
-
-beforeEach(function () {
-    $this->eventDispatcher = new EventDispatcher;
-});
 
 describe('RequestRide', function () {
 
     test('Deve falhar ao não encontrar o passageiro', function () {
         $accountRepository = new AccountModelRepository(new AccountModel);
         $rideRepository = new RideModelRepository(new RideModel);
+        $messageBroker = Mockery::mock(MessageBroker::class);
+        $messageBroker->shouldReceive('publish')
+            ->times(0);
         $requestRide = new RequestRide(
             accountRepository: $accountRepository,
             rideRepository: $rideRepository,
-            eventDispatcher: $this->eventDispatcher
+            messageBroker: $messageBroker
         );
         $requestRideInput = new RequestRideInput(
             passengerId: Uuid::create(),
@@ -49,10 +48,13 @@ describe('RequestRide', function () {
         $signupInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', false, true, 'password');
         $signupOutput = $signup->execute($signupInput);
         $rideRepository = new RideModelRepository(new RideModel);
+        $messageBroker = Mockery::mock(MessageBroker::class);
+        $messageBroker->shouldReceive('publish')
+            ->times(0);
         $requestRide = new RequestRide(
             accountRepository: $accountRepository,
             rideRepository: $rideRepository,
-            eventDispatcher: $this->eventDispatcher
+            messageBroker: $messageBroker
         );
         $requestRideInput = new RequestRideInput(
             passengerId: $signupOutput->accountId,
@@ -71,11 +73,14 @@ describe('RequestRide', function () {
         $signupInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false, 'password');
         $signupOutput = $signup->execute($signupInput);
         $rideRepository = new RideModelRepository(new RideModel);
-
+        $messageBroker = Mockery::mock(MessageBroker::class);
+        $messageBroker->shouldReceive('publish')
+            ->once()
+            ->andReturn();
         $requestRide = new RequestRide(
             accountRepository: $accountRepository,
             rideRepository: $rideRepository,
-            eventDispatcher: $this->eventDispatcher
+            messageBroker: $messageBroker
         );
         $requestRideInput = new RequestRideInput(
             passengerId: $signupOutput->accountId,

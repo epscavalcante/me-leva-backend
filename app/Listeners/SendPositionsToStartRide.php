@@ -30,10 +30,10 @@ class SendPositionsToStartRide
                 exchange: $event->getEventName(),
                 data: [
                     'ride_id' => $event->getResourceId(),
-                    ...$position
+                    ...$position,
                 ]
             );
-            sleep(rand(1,3));
+            sleep(rand(1, 3));
         }
     }
 }

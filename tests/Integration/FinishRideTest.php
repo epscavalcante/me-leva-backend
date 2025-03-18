@@ -2,176 +2,106 @@
 
 use App\Account as AccountModel;
 use App\Position as PositionModel;
-use App\Repositories\AccountModelRepository;
 use App\Repositories\PositionModelRepository;
 use App\Repositories\RideModelRepository;
 use App\Ride as RideModel;
-use Core\Application\UseCases\AcceptRide;
-use Core\Application\UseCases\DTOs\AcceptRideInput;
+use App\Services\MessageBroker\MessageBroker;
 use Core\Application\UseCases\DTOs\FinishRideInput;
-use Core\Application\UseCases\DTOs\GenerateReceiptInput;
 use Core\Application\UseCases\DTOs\GetRideInput;
 use Core\Application\UseCases\DTOs\GetRideOutput;
-use Core\Application\UseCases\DTOs\RequestRideInput;
-use Core\Application\UseCases\DTOs\SignupInput;
-use Core\Application\UseCases\DTOs\StartRideInput;
 use Core\Application\UseCases\DTOs\UpdatePositionInput;
 use Core\Application\UseCases\FinishRide;
-use Core\Application\UseCases\GenerateReceipt;
 use Core\Application\UseCases\GetRide;
-use Core\Application\UseCases\RequestRide;
-use Core\Application\UseCases\Signup;
-use Core\Application\UseCases\StartRide;
 use Core\Application\UseCases\UpdatePosition;
 use Core\Domain\Events\EventDispatcher;
-use Core\Domain\Events\RideFinishedEvent;
 use Core\Domain\Exceptions\RideCannotBeFinishedException;
 use Core\Domain\Exceptions\RideNotFoundException;
 use Core\Domain\ValueObjects\Uuid;
 
 beforeEach(function () {
-    $accountRepository = new AccountModelRepository(new AccountModel);
-    $this->signup = new Signup(accountRepository: $accountRepository);
-
+    $this->rideRepository = new RideModelRepository(new RideModel);
+    $this->positionRepository = new PositionModelRepository(new PositionModel);
     $eventDispatcher = new EventDispatcher;
-    $rideRepository = new RideModelRepository(new RideModel);
-    $this->requestRide = new RequestRide(
-        accountRepository: $accountRepository,
-        rideRepository: $rideRepository,
-        eventDispatcher: $eventDispatcher
-    );
-
-    $this->acceptRide = new AcceptRide(
-        accountRepository: $accountRepository,
-        rideRepository: $rideRepository,
-        eventDispatcher: $eventDispatcher
-    );
-
-    $this->startRide = new StartRide(
-        rideRepository: $rideRepository,
-        eventDispatcher: $eventDispatcher
-    );
-
-    $positionRepository = new PositionModelRepository(new PositionModel);
-    $this->updatePosition = new UpdatePosition(
-        rideRepository: $rideRepository,
-        positionRepository: $positionRepository,
-        eventDispatcher: $eventDispatcher
-    );
-
-    $this->generateReceipt = new GenerateReceipt(
-        rideRepository: $rideRepository,
-    );
-
-    $eventDispatcher->register('RIDE.COMPLETED', function (RideFinishedEvent $event) {
-        $generateReceiptInput = new GenerateReceiptInput($event->getData()['ride_id']);
-        $this->generateReceipt->execute($generateReceiptInput);
-    });
     $this->finishRide = new FinishRide(
-        rideRepository: $rideRepository,
-        positionRepository: $positionRepository,
+        rideRepository: $this->rideRepository,
+        positionRepository: $this->positionRepository,
         eventDispatcher: $eventDispatcher
-    );
-
-    $this->getRide = new GetRide(
-        rideRepository: $rideRepository,
-        positionRepository: $positionRepository
     );
 });
 
 describe('FinishRide', function () {
     test('Deve falhar não encontrar a corrida', function () {
-        $startRideInput = new StartRideInput(
+        $finishRideInput = new FinishRideInput(
             rideId: Uuid::create(),
         );
 
-        expect(fn () => $this->startRide->execute($startRideInput))->toThrow(RideNotFoundException::class);
+        expect(fn () => $this->finishRide->execute($finishRideInput))->toThrow(RideNotFoundException::class);
     });
 
     test('Deve falhar ao finalizar uma corrida que não foi iniciada', function () {
-        $signupPassengerInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false, 'password');
-        $signupPassengerOutput = $this->signup->execute($signupPassengerInput);
+        $passengerModel = AccountModel::factory()->passenger()->create();
+        $driverModel = AccountModel::factory()->driver()->create();
+        $rideModel = RideModel::factory()->accepted($driverModel->account_id)
+            ->create(['passenger_id' => $passengerModel->account_id]);
 
-        $requestRideInput = new RequestRideInput(
-            passengerId: $signupPassengerOutput->accountId,
-            fromLatitude: '-27.584905257808835',
-            fromLongitude: '-48.545022195325124',
-            toLatitude: '-27.496887588317275',
-            toLongitude: '-48.522234807851476'
-        );
-        $requestRideOutput = $this->requestRide->execute($requestRideInput);
-
-        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', false, true, 'password');
-        $signupDriverOutput = $this->signup->execute($signupDriverInput);
-
-        $acceptRideInput = new AcceptRideInput(
-            rideId: $requestRideOutput->rideId,
-            driverId: $signupDriverOutput->accountId
-        );
-        $this->acceptRide->execute($acceptRideInput);
-
-        $finishRideInput = new FinishRideInput($requestRideOutput->rideId);
+        $finishRideInput = new FinishRideInput($rideModel->ride_id);
         expect(fn () => $this->finishRide->execute($finishRideInput))->toThrow(RideCannotBeFinishedException::class);
     });
 
     test('Deve finailizar uma corrida', function () {
-        $signupPassengerInput = new SignupInput('John', 'Doe', 'john.doe@email.com', '00000000000', true, false, 'password');
-        $signupPassengerOutput = $this->signup->execute($signupPassengerInput);
+        $passengerModel = AccountModel::factory()->passenger()->create();
+        $driverModel = AccountModel::factory()->driver()->create();
+        $rideModel = RideModel::factory()->started()
+            ->create([
+                'driver_id' => $driverModel->account_id,
+                'passenger_id' => $passengerModel->account_id,
+            ]);
 
-        $requestRideInput = new RequestRideInput(
-            passengerId: $signupPassengerOutput->accountId,
-            fromLatitude: '-27.584905257808835',
-            fromLongitude: '-48.545022195325124',
-            toLatitude: '-27.496887588317275',
-            toLongitude: '-48.522234807851476'
+        $messageBroker = Mockery::mock(MessageBroker::class);
+        $messageBroker->shouldReceive('publish')->times(4)->andReturn();
+        $updatePosition = new UpdatePosition(
+            rideRepository: $this->rideRepository,
+            positionRepository: $this->positionRepository,
+            messageBroker: $messageBroker
         );
-        $requestRideOutput = $this->requestRide->execute($requestRideInput);
-
-        $signupDriverInput = new SignupInput('James', 'Brooks', 'james.brooks@email.com', '00000000000', false, true, 'password');
-        $signupDriverOutput = $this->signup->execute($signupDriverInput);
-
-        $acceptRideInput = new AcceptRideInput(
-            rideId: $requestRideOutput->rideId,
-            driverId: $signupDriverOutput->accountId
-        );
-        $this->acceptRide->execute($acceptRideInput);
-
-        $startRideInput = new StartRideInput($requestRideOutput->rideId);
-        $this->startRide->execute($startRideInput);
 
         $updatePositionInput1 = new UpdatePositionInput(
-            rideId: $requestRideOutput->rideId,
+            rideId: $rideModel->ride_id,
             latitude: '-27.584905257808835',
             longitude: '-48.545022195325124'
         );
-        $this->updatePosition->execute($updatePositionInput1);
+        $updatePosition->execute($updatePositionInput1);
 
         $updatePositionInput2 = new UpdatePositionInput(
-            rideId: $requestRideOutput->rideId,
+            rideId: $rideModel->ride_id,
             latitude: '-27.496887588317275',
             longitude: '-48.522234807851476'
         );
-        $this->updatePosition->execute($updatePositionInput2);
+        $updatePosition->execute($updatePositionInput2);
 
         $updatePositionInput4 = new UpdatePositionInput(
-            rideId: $requestRideOutput->rideId,
+            rideId: $rideModel->ride_id,
             latitude: '-27.584905257808835',
             longitude: '-48.545022195325124'
         );
-        $this->updatePosition->execute($updatePositionInput4);
+        $updatePosition->execute($updatePositionInput4);
 
         $updatePositionInput3 = new UpdatePositionInput(
-            rideId: $requestRideOutput->rideId,
+            rideId: $rideModel->ride_id,
             latitude: '-27.496887588317275',
             longitude: '-48.522234807851476'
         );
-        $this->updatePosition->execute($updatePositionInput3);
+        $updatePosition->execute($updatePositionInput3);
 
-        $finishRideInput = new FinishRideInput($requestRideOutput->rideId);
+        $finishRideInput = new FinishRideInput($rideModel->ride_id);
         $this->finishRide->execute($finishRideInput);
 
-        $getRideInput = new GetRideInput($requestRideOutput->rideId);
-        $getRideOutput = $this->getRide->execute($getRideInput);
+        $getRide = new GetRide(
+            rideRepository: $this->rideRepository,
+            positionRepository: $this->positionRepository
+        );
+        $getRideInput = new GetRideInput($rideModel->ride_id);
+        $getRideOutput = $getRide->execute($getRideInput);
 
         expect($getRideOutput)->toBeInstanceOf(GetRideOutput::class);
         expect($getRideOutput->status)->toBe('completed');
