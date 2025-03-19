@@ -3,6 +3,7 @@
 namespace Core\Application\UseCases;
 
 use App\Services\MessageBroker\MessageBroker;
+use App\Services\UnitOfWork\UnitOfWork;
 use Core\Application\Repositories\AccountRepository;
 use Core\Application\Repositories\RideRepository;
 use Core\Application\UseCases\DTOs\AcceptRideInput;
@@ -17,6 +18,7 @@ class AcceptRide
         private readonly RideRepository $rideRepository,
         private readonly AccountRepository $accountRepository,
         private readonly MessageBroker $messageBroker,
+        private readonly UnitOfWork $unitOfWork,
     ) {}
 
     public function execute(AcceptRideInput $input): void
@@ -36,8 +38,15 @@ class AcceptRide
         }
 
         $ride->register(RideAcceptedEvent::name(), function (RideAcceptedEvent $event) use ($ride) {
-            $this->rideRepository->update($ride);
-            $this->messageBroker->publish($event->getName(), $event->getData());
+            try {
+                $this->rideRepository->update($ride);
+
+                $this->messageBroker->publish($event->getName(), $event->getData());
+                $this->unitOfWork->commit();
+            } catch (\Throwable $th) {
+                $this->unitOfWork->rollback();
+                throw $th;
+            }
         });
 
         $ride->accept($account->getId());

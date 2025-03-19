@@ -7,6 +7,7 @@ use App\Repositories\PositionModelRepository;
 use App\Repositories\RideModelRepository;
 use App\Ride as RideModel;
 use App\Services\MessageBroker\MessageBroker;
+use App\Services\UnitOfWork\UnitOfWork;
 use Core\Application\UseCases\AcceptRide;
 use Core\Application\UseCases\DTOs\AcceptRideInput;
 use Core\Application\UseCases\DTOs\GetRideInput;
@@ -32,11 +33,15 @@ describe('AcceptRide', function () {
         );
 
         $messageBroker = Mockery::mock(MessageBroker::class);
-        $messageBroker->shouldNotReceive('publish');
+        $unitOfWork = Mockery::mock(UnitOfWork::class);
+        $unitOfWork->shouldNotReceive('publish');
+        $unitOfWork->shouldNotReceive('commit');
+        $unitOfWork->shouldNotReceive('rollback');
         $acceptRide = new AcceptRide(
             accountRepository: $this->accountRepository,
             rideRepository: $this->rideRepository,
-            messageBroker: $messageBroker
+            messageBroker: $messageBroker,
+            unitOfWork: $unitOfWork
         );
 
         expect(fn () => $acceptRide->execute($acceptRideInput))->toThrow(AccountNotFoundException::class);
@@ -52,10 +57,15 @@ describe('AcceptRide', function () {
 
         $messageBroker = Mockery::mock(MessageBroker::class);
         $messageBroker->shouldNotReceive('publish');
+        $unitOfWork = Mockery::mock(UnitOfWork::class);
+        $unitOfWork->shouldNotReceive('publish');
+        $unitOfWork->shouldNotReceive('commit');
+        $unitOfWork->shouldNotReceive('rollback');
         $acceptRide = new AcceptRide(
             accountRepository: $this->accountRepository,
             rideRepository: $this->rideRepository,
-            messageBroker: $messageBroker
+            messageBroker: $messageBroker,
+            unitOfWork: $unitOfWork
         );
 
         expect(fn () => $acceptRide->execute($acceptRideInput))->toThrow(AccountCannotBeAcceptRideException::class);
@@ -70,10 +80,15 @@ describe('AcceptRide', function () {
         );
         $messageBroker = Mockery::mock(MessageBroker::class);
         $messageBroker->shouldNotReceive('publish');
+        $unitOfWork = Mockery::mock(UnitOfWork::class);
+        $unitOfWork->shouldNotReceive('publish');
+        $unitOfWork->shouldNotReceive('commit');
+        $unitOfWork->shouldNotReceive('rollback');
         $acceptRide = new AcceptRide(
             accountRepository: $this->accountRepository,
             rideRepository: $this->rideRepository,
-            messageBroker: $messageBroker
+            messageBroker: $messageBroker,
+            unitOfWork: $unitOfWork
         );
         expect(fn () => $acceptRide->execute($acceptRideInput))->toThrow(RideNotFoundException::class);
     });
@@ -91,10 +106,15 @@ describe('AcceptRide', function () {
 
         $messageBroker = Mockery::mock(MessageBroker::class);
         $messageBroker->shouldNotReceive('publish');
+        $unitOfWork = Mockery::mock(UnitOfWork::class);
+        $unitOfWork->shouldNotReceive('publish');
+        $unitOfWork->shouldNotReceive('commit');
+        $unitOfWork->shouldNotReceive('rollback');
         $acceptRide = new AcceptRide(
             accountRepository: $this->accountRepository,
             rideRepository: $this->rideRepository,
-            messageBroker: $messageBroker
+            messageBroker: $messageBroker,
+            unitOfWork: $unitOfWork
         );
 
         expect(fn () => $acceptRide->execute($acceptRideInput))->toThrow(RideCannotBeAcceptedException::class);
@@ -115,10 +135,16 @@ describe('AcceptRide', function () {
         $messageBroker->shouldReceive('publish')
             ->once()
             ->andReturn();
+        $unitOfWork = Mockery::mock(UnitOfWork::class);
+        $unitOfWork->shouldNotReceive('publish');
+        $unitOfWork->shouldNotReceive('rollback');
+        $unitOfWork->shouldReceive('commit')
+            ->once()->andReturn();
         $acceptRide = new AcceptRide(
             accountRepository: $this->accountRepository,
             rideRepository: $this->rideRepository,
-            messageBroker: $messageBroker
+            messageBroker: $messageBroker,
+            unitOfWork: $unitOfWork
         );
         $acceptRide->execute($acceptRideInput);
 

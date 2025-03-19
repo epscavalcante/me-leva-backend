@@ -2,19 +2,19 @@
 
 namespace App\Console\Commands;
 
-use App\Events\Ride\RideRequestedEvent;
+use App\Events\Ride\RidePositionUpdatedEvent;
 use App\Services\MessageBroker\MessageBroker;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
-class RideRequestedConsummer extends Command
+class RidePositionUpdatedConsumer extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'consume:ride-requested {queue}';
+    protected $signature = 'consume:postion-updated';
 
     /**
      * The console command description.
@@ -31,13 +31,12 @@ class RideRequestedConsummer extends Command
         while (true) {
             Log::info('Start Consume message');
             $messageBroker->consume(
-                queue: $this->argument('queue'),
+                queue: 'ride_position_updated',
                 callback: function ($data) {
                     Log::info('Process message', ['data' => $data]);
-
-                    RideRequestedEvent::dispatch(
+                    RidePositionUpdatedEvent::dispatch(
                         $data['ride_id'],
-                        'RIDE.REQUESTED',
+                        'RIDE.POSITION_UPDATED',
                         $data
                     );
                 }
