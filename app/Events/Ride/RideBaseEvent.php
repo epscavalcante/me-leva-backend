@@ -37,7 +37,7 @@ abstract class RideBaseEvent implements ShouldBroadcast
 
     public function broadcastWith(): array
     {
-        return $this->eventData;
+        return $this->getEventData();
     }
 
     public function getResourceId(): string
@@ -48,5 +48,10 @@ abstract class RideBaseEvent implements ShouldBroadcast
     public function getEventName(): string
     {
         return $this->eventName;
+    }
+
+    public function getEventData(): array
+    {
+        return $this->eventData;
     }
 }

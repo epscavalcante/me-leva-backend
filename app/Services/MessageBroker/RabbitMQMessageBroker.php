@@ -3,16 +3,77 @@
 namespace App\Services\MessageBroker;
 
 use Closure;
+use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
+use PhpAmqpLib\Exchange\AMQPExchangeType;
 use PhpAmqpLib\Message\AMQPMessage;
 
 class RabbitMQMessageBroker implements MessageBroker
 {
     private ?AMQPStreamConnection $connection = null;
 
-    public function __construct()
+    private ?AMQPChannel $channel = null;
+
+    public function publish(string $exchange, array $data): void
+    {
+        $this->connect();
+
+        $this->channel->exchange_declare(
+            exchange: $exchange,
+            type: AMQPExchangeType::DIRECT,
+            passive: false,
+            durable: true,
+            auto_delete: false
+        );
+
+        $this->channel->basic_publish(
+            exchange: $exchange,
+            msg: new AMQPMessage(
+                body: json_encode($data),
+                properties: [
+                    'delivery_mode' => AMQPMessage::DELIVERY_MODE_PERSISTENT,
+                ]
+            ),
+        );
+
+        $this->disconect();
+    }
+
+    public function consume(string $queue, Closure $callback): void
+    {
+        $this->connect();
+
+        $this->channel->queue_declare(
+            queue: $queue,
+            durable: true,
+            auto_delete: false
+        );
+
+        $this->channel->basic_consume(
+            queue: $queue,
+            consumer_tag: '',
+            no_local: false,
+            no_ack: false,
+            exclusive: false,
+            nowait: false,
+            callback: function (AMQPMessage $message) use ($callback) {
+                $message->ack();
+                $callback(json_decode($message->getBody(), true));
+            }
+        );
+
+        while ($this->channel->is_consuming()) {
+            $this->channel->wait();
+        }
+
+        $this->disconect();
+    }
+
+    private function connect(): void
     {
         if ($this->connection) {
+            $this->channel = $this->connection->channel();
+
             return;
         }
 
@@ -23,37 +84,14 @@ class RabbitMQMessageBroker implements MessageBroker
             port: config('services.rabbitmq.port'),
             vhost: config('services.rabbitmq.vhost')
         );
+
+        $this->channel = $this->connection->channel();
     }
 
-    public function publish(string $exchange, array $data): void
+    private function disconect(): void
     {
-        $channel = $this->connection->channel();
-        $msg = new AMQPMessage(json_encode($data));
-        $channel->basic_publish(
-            msg: $msg,
-            exchange: $exchange
-        );
-        $channel->close();
-        $this->connection->close();
-    }
+        $this->channel->close();
 
-    public function consume(string $queue, Closure $callback): void
-    {
-        $channel = $this->connection->channel();
-        $channel->basic_consume(
-            queue: $queue,
-            consumer_tag: '',
-            no_local: false,
-            no_ack: false,
-            exclusive: false,
-            nowait: false,
-            callback: $callback
-        );
-        echo 'Waiting for new message on test_queue', " \n";
-        while ($channel->is_consuming()) {
-            $channel->wait();
-        }
-        $channel->close();
         $this->connection->close();
     }
 }
