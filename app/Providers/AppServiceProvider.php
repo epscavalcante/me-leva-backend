@@ -10,6 +10,8 @@ use App\Services\MessageBroker\MessageBroker;
 use App\Services\MessageBroker\RabbitMQMessageBroker;
 use App\Services\TokenGenerator\MyJwt;
 use App\Services\TokenGenerator\TokenGenerator;
+use App\Services\UnitOfWork\DatabaseUnitOfWork;
+use App\Services\UnitOfWork\UnitOfWork;
 use Core\Application\Repositories\AccountRepository;
 use Core\Application\Repositories\PositionRepository;
 use Core\Application\Repositories\RideRepository;
@@ -17,11 +19,7 @@ use Core\Application\UseCases\DTOs\GenerateReceiptInput;
 use Core\Application\UseCases\GenerateReceipt;
 use Core\Domain\Events\Event as DomainEvent;
 use Core\Domain\Events\EventDispatcher;
-use Core\Domain\Events\RideAcceptedEvent as RideAcceptedDomainEvent;
 use Core\Domain\Events\RideFinishedEvent as RideFinishedDomainEvent;
-use Core\Domain\Events\RidePositionUpdatedEvent as RidePositionUpdatedDomainEvent;
-use Core\Domain\Events\RideRequestedEvent as RideRequestedDomainEvent;
-use Core\Domain\Events\RideStartedEvent as RideStartedDomainEvent;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -60,6 +58,11 @@ class AppServiceProvider extends ServiceProvider
             abstract: MessageBroker::class,
             concrete: RabbitMQMessageBroker::class
         );
+
+        $this->app->bind(
+            abstract: UnitOfWork::class,
+            concrete: DatabaseUnitOfWork::class
+        );
     }
 
     /**
@@ -83,11 +86,11 @@ class AppServiceProvider extends ServiceProvider
     private function setupRideEvents($eventDispatcher)
     {
         $eventsName = [
-            RideRequestedDomainEvent::name(),
-            RideAcceptedDomainEvent::name(),
-            RideStartedDomainEvent::name(),
-            RideFinishedDomainEvent::name(),
-            RidePositionUpdatedDomainEvent::name(),
+            // RideRequestedDomainEvent::name(),
+            // RideAcceptedDomainEvent::name(),
+            // RideStartedDomainEvent::name(),
+            // RideFinishedDomainEvent::name(),
+            // RidePositionUpdatedDomainEvent::name(),
         ];
 
         foreach ($eventsName as $eventName) {
