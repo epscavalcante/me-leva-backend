@@ -18,7 +18,6 @@ use Core\Domain\Exceptions\RideCannotBeStartedException;
 use Core\Domain\Exceptions\RideNotFoundException;
 use Core\Domain\ValueObjects\Uuid;
 
-
 describe('StartRide', function () {
     test('Deve falhar não encontrar a corrida', function () {
         $unitOfWork = Mockery::mock(UnitOfWork::class);
@@ -49,7 +48,7 @@ describe('StartRide', function () {
         $rideRepository = Mockery::mock(RideRepository::class);
 
         $ride = new Ride(
-            rideId:  (string) Uuid::create(),
+            rideId: (string) Uuid::create(),
             passengerId: (string) Uuid::create(),
             status: 'requested',
             fromLatitude: -15,
@@ -76,10 +75,10 @@ describe('StartRide', function () {
         $rideModel = RideModel::factory()->accepted($driverModel->account_id)
             ->create(['passenger_id' => $passengerModel->account_id]);
 
-        $unitOfWork = new DatabaseUnitOfWork();
+        $unitOfWork = new DatabaseUnitOfWork;
         $messageBroker = Mockery::mock(MessageBroker::class);
         $messageBroker->shouldReceive('publish')->times(1);
-        $rideRepository = new RideModelRepository(new RideModel());
+        $rideRepository = new RideModelRepository(new RideModel);
         $startRide = new StartRide(
             unitOfWork: $unitOfWork,
             messageBroker: $messageBroker,
