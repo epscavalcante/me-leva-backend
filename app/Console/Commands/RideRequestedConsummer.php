@@ -2,8 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Events\Ride\RideRequestedEvent;
+use App\Account;
 use App\Services\MessageBroker\MessageBroker;
+use Core\Application\UseCases\AcceptRide;
+use Core\Application\UseCases\DTOs\AcceptRideInput;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -14,7 +16,7 @@ class RideRequestedConsummer extends Command
      *
      * @var string
      */
-    protected $signature = 'consume:ride-requested {queue}';
+    protected $signature = 'consume:ride-requested';
 
     /**
      * The console command description.
@@ -26,20 +28,27 @@ class RideRequestedConsummer extends Command
     /**
      * Execute the console command.
      */
-    public function handle(MessageBroker $messageBroker)
+    public function handle(MessageBroker $messageBroker, AcceptRide $acceptRide)
     {
         while (true) {
             Log::info('Start Consume message');
             $messageBroker->consume(
-                queue: $this->argument('queue'),
-                callback: function ($data) {
+                queue: 'ride_requested',
+                callback: function ($data) use ($acceptRide) {
                     Log::info('Process message', ['data' => $data]);
 
-                    RideRequestedEvent::dispatch(
-                        $data['ride_id'],
-                        'RIDE.REQUESTED',
-                        $data
+                    sleep(3);
+
+                    $availableDriver = Account::query()->where('is_driver', true)->inRandomOrder()->firstOrCreate();
+                    if (! $availableDriver) {
+                        $availableDriver = Account::factory()->driver()->create();
+                    }
+
+                    $acceptRideInput = new AcceptRideInput(
+                        rideId: $data['ride_id'],
+                        driverId: $availableDriver->account_id
                     );
+                    $acceptRide->execute($acceptRideInput);
                 }
             );
             Log::info('End Consume message');
