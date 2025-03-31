@@ -33,4 +33,9 @@ class InProgressRideStatus extends RideStatus
     {
         $this->ride->setStatus(new FinishedRideStatus($this->ride));
     }
+
+    public function cancel(): void
+    {
+        $this->ride->setStatus(new CanceledRideStatus($this->ride));
+    }
 }

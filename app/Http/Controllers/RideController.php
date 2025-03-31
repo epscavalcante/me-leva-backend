@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdatePositionRequest;
 use Core\Application\UseCases\AcceptRide;
+use Core\Application\UseCases\CancelRide\CancelRideInput;
+use Core\Application\UseCases\CancelRide\CancelRideUseCase;
 use Core\Application\UseCases\DTOs\AcceptRideInput;
 use Core\Application\UseCases\DTOs\FinishRideInput;
 use Core\Application\UseCases\DTOs\GetRideInput;
@@ -39,6 +41,14 @@ class RideController extends Controller
             ],
             status: Response::HTTP_CREATED
         );
+    }
+
+    public function cancelRide(string $rideId, CancelRideUseCase $cancelRideUseCase)
+    {
+        $cancelRideinput = new CancelRideInput(rideId: $rideId);
+        $cancelRideUseCase->execute($cancelRideinput);
+
+        return response()->noContent();
     }
 
     public function acceptRide(string $rideId, AcceptRide $acceptRide)

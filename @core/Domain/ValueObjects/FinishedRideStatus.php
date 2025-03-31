@@ -4,6 +4,7 @@ namespace Core\Domain\ValueObjects;
 
 use Core\Domain\Entities\Ride;
 use Core\Domain\Exceptions\RideCannotBeAcceptedException;
+use Core\Domain\Exceptions\RideCannotBeCanceledException;
 use Core\Domain\Exceptions\RideCannotBeFinishedException;
 use Core\Domain\Exceptions\RideCannotBeRequestedException;
 use Core\Domain\Exceptions\RideCannotBeStartedException;
@@ -33,5 +34,10 @@ class FinishedRideStatus extends RideStatus
     public function finish(): void
     {
         throw new RideCannotBeFinishedException;
+    }
+
+    public function cancel(): void
+    {
+        throw new RideCannotBeCanceledException;
     }
 }

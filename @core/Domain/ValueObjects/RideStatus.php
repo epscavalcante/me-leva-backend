@@ -16,6 +16,8 @@ abstract class RideStatus
 
     abstract public function finish(): void;
 
+    abstract public function cancel(): void;
+
     public function getValue(): string
     {
         return $this->value;

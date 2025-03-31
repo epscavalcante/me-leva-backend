@@ -33,4 +33,9 @@ class RequestedRideStatus extends RideStatus
     {
         throw new RideCannotBeFinishedException;
     }
+
+    public function cancel(): void
+    {
+        $this->ride->setStatus(new CanceledRideStatus($this->ride));
+    }
 }
