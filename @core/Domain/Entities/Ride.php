@@ -5,6 +5,7 @@ namespace Core\Domain\Entities;
 use Core\Domain\Enums\RideStatusEnum;
 use Core\Domain\Events\EventDispatcher;
 use Core\Domain\Events\RideAcceptedEvent;
+use Core\Domain\Events\RideCanceledEvent;
 use Core\Domain\Events\RideFinishedEvent;
 use Core\Domain\Events\RidePositionUpdatedEvent;
 use Core\Domain\Events\RideStartedEvent;
@@ -149,6 +150,8 @@ class Ride extends EventDispatcher
     public function cancel()
     {
         $this->status->cancel();
+        $rideCanceledEvent = new RideCanceledEvent($this);
+        $this->dispatch($rideCanceledEvent);
     }
 
     public function start()

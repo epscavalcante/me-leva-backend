@@ -26,16 +26,26 @@ class AuthenticationMiddleware
             abort(HttpResponse::HTTP_FORBIDDEN, 'Bearer token not provided');
         }
 
+        $data = $this->tokenGenerator->decode($token);
+        $user = Account::find($data['account_id']);
+        if (! $user) {
+            abort(HttpResponse::HTTP_FORBIDDEN, 'Bearer token not provided');
+        }
+
+        Auth::setUser(
+            user: $user
+        );
+
+        return $next($request);
+
+        /*
         try {
             $data = $this->tokenGenerator->decode($token);
             $user = Account::find($data['account_id']);
-            Auth::setUser(
-                user: $user
-            );
 
-            return $next($request);
         } catch (\Throwable $th) {
             throw $th;
         }
+        */
     }
 }
