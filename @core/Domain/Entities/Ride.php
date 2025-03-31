@@ -2,6 +2,7 @@
 
 namespace Core\Domain\Entities;
 
+use Core\Domain\Enums\RideStatusEnum;
 use Core\Domain\Events\EventDispatcher;
 use Core\Domain\Events\RideAcceptedEvent;
 use Core\Domain\Events\RideFinishedEvent;
@@ -63,7 +64,7 @@ class Ride extends EventDispatcher
         string $toLongitude,
     ) {
         $rideId = Uuid::create();
-        $status = 'requested';
+        $status = RideStatusEnum::REQUESTED->value;
         $driverId = null;
         $distance = 0;
         $fare = 0;
@@ -145,6 +146,11 @@ class Ride extends EventDispatcher
         $this->dispatch($eventRideAccepted);
     }
 
+    public function cancel()
+    {
+        $this->status->cancel();
+    }
+
     public function start()
     {
         $this->status->start();
@@ -175,11 +181,16 @@ class Ride extends EventDispatcher
 
     public function isCompleted(): bool
     {
-        return $this->getStatus() === 'completed';
+        return $this->getStatus() === RideStatusEnum::COMPLETED->value;
+    }
+
+    public function isCanceled(): bool
+    {
+        return $this->getStatus() === RideStatusEnum::CANCELED->value;
     }
 
     public function isInProgress(): bool
     {
-        return $this->getStatus() === 'in_progress';
+        return $this->getStatus() === RideStatusEnum::CANCELED->value;
     }
 }

@@ -3,15 +3,18 @@
 namespace Core\Domain\ValueObjects;
 
 use Core\Domain\Entities\Ride;
+use Core\Domain\Enums\RideStatusEnum;
+use Core\Domain\Exceptions\RideCannotBeAcceptedException;
+use Core\Domain\Exceptions\RideCannotBeCanceledException;
 use Core\Domain\Exceptions\RideCannotBeFinishedException;
 use Core\Domain\Exceptions\RideCannotBeRequestedException;
 use Core\Domain\Exceptions\RideCannotBeStartedException;
 
-class RequestedRideStatus extends RideStatus
+class CanceledRideStatus extends RideStatus
 {
     public function __construct(readonly Ride $ride)
     {
-        parent::__construct('requested');
+        parent::__construct(RideStatusEnum::CANCELED->value);
     }
 
     public function request(): void
@@ -21,7 +24,7 @@ class RequestedRideStatus extends RideStatus
 
     public function accept(): void
     {
-        $this->ride->setStatus(new AcceptedRideStatus($this->ride));
+        throw new RideCannotBeAcceptedException;
     }
 
     public function start(): void
@@ -36,6 +39,6 @@ class RequestedRideStatus extends RideStatus
 
     public function cancel(): void
     {
-        $this->ride->setStatus(new CanceledRideStatus($this->ride));
+        throw new RideCannotBeCanceledException;
     }
 }

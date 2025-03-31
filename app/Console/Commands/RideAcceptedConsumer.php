@@ -38,12 +38,10 @@ class RideAcceptedConsumer extends Command
                         ->as('RIDE.ACCEPTED')
                         ->with([
                             'ride_id' => $data['ride_id'],
-                            'driver_id' => 'motorista 1',
-                            [
-                                'position' => [
-                                    'latitude' => -15.614348,
-                                    'longitude' => -56.073746,
-                                ],
+                            'driver_id' => $data['driver_id'],
+                            'position' => [
+                                'latitude' => -15.614348,
+                                'longitude' => -56.073746,
                             ],
                         ])
                         ->sendNow();
