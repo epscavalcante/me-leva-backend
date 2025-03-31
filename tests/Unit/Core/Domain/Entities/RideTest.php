@@ -3,8 +3,6 @@
 use Core\Domain\Entities\Ride;
 use Core\Domain\Enums\RideStatusEnum;
 use Core\Domain\Exceptions\RideCannotBeCanceledException;
-use Core\Domain\ValueObjects\Email;
-use Core\Domain\ValueObjects\RideStatus;
 use Core\Domain\ValueObjects\Uuid;
 
 describe('Ride Entity Test', function () {

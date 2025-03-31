@@ -4,7 +4,6 @@ namespace Core\Domain\ValueObjects;
 
 use Core\Domain\Entities\Ride;
 use Core\Domain\Exceptions\RideCannotBeAcceptedException;
-use Core\Domain\Exceptions\RideCannotBeCanceledException;
 use Core\Domain\Exceptions\RideCannotBeFinishedException;
 use Core\Domain\Exceptions\RideCannotBeRequestedException;
 
