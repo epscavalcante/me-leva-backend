@@ -36,17 +36,31 @@ jobs:
     if: github.ref == 'refs/heads/main'
     needs: build
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      # Necessário para executar builds ARM64 no runner AMD64
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      # Cria um builder usando docker-container driver
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Log in to DockerHub
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_HUB_USER }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
-      - name: Build & push da imagem do docker
-        uses: docker/build-push-action@v3
+
+      - name: Build & push Docker image
+        uses: docker/build-push-action@v6
         with:
+          context: .
           file: ./Dockerfile.prod
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}, ${{ env.IMAGE_NAME }}:latest
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.IMAGE_NAME }}:latest
