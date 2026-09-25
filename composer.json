@@ -1,13 +1,12 @@
 {
-    "name": "epscavalcante/carona-facil-backend",
+    "name": "epscavalcante/me-leva-backend",
     "type": "project",
-    "description": "Carona Fácil API",
-    "keywords": ["Carona Fácil", "Carona Fácil API"],
+    "description": "Me Leva API",
+    "keywords": ["Me Leva", "Me Leva API"],
     "license": "MIT",
     "require": {
         "php": "^8.2",
         "laravel/framework": "^11.0",
-        "laravel/octane": "^2.4",
         "laravel/reverb": "@beta",
         "laravel/tinker": "^2.9",
         "php-amqplib/php-amqplib": "^3.7",

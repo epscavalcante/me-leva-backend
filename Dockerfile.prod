@@ -1,42 +1,38 @@
-FROM php:8.2-fpm-alpine3.19 AS builder
+FROM php:8.2-cli-alpine3.19
 
-RUN apk add --no-cache shadow openssl bash linux-headers
+RUN apk add --no-cache \
+    libpq-dev \
+    linux-headers \
+    $PHPIZE_DEPS \
+    && docker-php-ext-install \
+        pdo \
+        pdo_pgsql \
+        pdo_mysql \
+        pcntl \
+        sockets \
+    && apk del $PHPIZE_DEPS
 
-# Install PHP extensions
-RUN docker-php-ext-install sockets
-
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-WORKDIR /var/www
-
-RUN rm -rf /var/www/html
-
-COPY . /var/www
-
-RUN composer install --optimize-autoloader --no-dev
-    # && php artisan optimize
-    # chmod -R 775 storage
-    # o config:cache é perigoso pois mesmo passando variavel ambiente ele não carrega, pois agora é via arquivo
-    #&& php artisan config:cache \
-
-RUN chown -R www-data:www-data /var/www
-
-RUN ln -s public html
-
-RUN usermod -u 1000 www-data
-
-FROM php:8.2-fpm-alpine3.19
-
-RUN apk add --no-cache bash libpq-dev linux-headers
-
-RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql sockets
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-RUN rm -rf /var/www/html
+COPY composer.json composer.lock ./
 
-COPY --from=builder /var/www .
+RUN composer install \
+    --no-dev \
+    --no-interaction \
+    --no-scripts \
+    --prefer-dist \
+    --optimize-autoloader
 
-EXPOSE 9000
+COPY . .
 
-ENTRYPOINT [ "php-fpm" ]
+RUN composer dump-autoload --optimize \
+    && php artisan package:discover --ansi \
+    && chown -R www-data:www-data storage bootstrap/cache
+
+USER www-data
+
+EXPOSE 8000
+
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
