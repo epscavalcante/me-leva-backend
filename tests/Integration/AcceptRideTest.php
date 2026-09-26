@@ -1,11 +1,11 @@
 <?php
 
-use App\Account as AccountModel;
-use App\Position as PositionModel;
+use App\Models\Account as AccountModel;
+use App\Models\Position as PositionModel;
+use App\Models\Ride as RideModel;
 use App\Repositories\AccountModelRepository;
 use App\Repositories\PositionModelRepository;
 use App\Repositories\RideModelRepository;
-use App\Ride as RideModel;
 use App\Services\MessageBroker\MessageBroker;
 use App\Services\UnitOfWork\UnitOfWork;
 use Core\Application\UseCases\AcceptRide;

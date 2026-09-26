@@ -1,6 +1,6 @@
 <?php
 
-use App\Account as AccountModel;
+use App\Models\Account as AccountModel;
 use App\Repositories\AccountModelRepository;
 use Core\Application\UseCases\DTOs\GetAccountInput;
 use Core\Application\UseCases\DTOs\GetAccountOutput;

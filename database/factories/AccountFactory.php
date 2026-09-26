@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Account;
+use App\Models\Account;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -26,7 +26,7 @@ class AccountFactory extends Factory
     {
         return [
             'account_id' => $this->faker->uuid(),
-            'first_name' => $this->faker->firstName(),
+            'first_name' => 'Mr(s) '.$this->faker->firstName(),
             'last_name' => $this->faker->lastName(),
             'email' => $this->faker->unique()->email(),
             'phone' => $this->faker->numerify('###########'),

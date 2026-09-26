@@ -1,7 +1,7 @@
 <?php
 
+use App\Models\Ride;
 use App\Repositories\RideModelRepository;
-use App\Ride;
 use App\Services\MessageBroker\MessageBroker;
 use App\Services\UnitOfWork\UnitOfWork;
 use Core\Application\UseCases\CancelRide\CancelRideInput;

@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Account;
+use App\Models\Account;
 use App\Services\TokenGenerator\TokenGenerator;
 use Closure;
 use Illuminate\Http\Request;

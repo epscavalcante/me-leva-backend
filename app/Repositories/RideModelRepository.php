@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Ride as RideModel;
+use App\Models\Ride as RideModel;
 use Core\Application\Repositories\RideRepository;
 use Core\Domain\Entities\Ride;
 use Illuminate\Database\Eloquent\Builder;

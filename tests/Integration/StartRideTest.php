@@ -1,8 +1,8 @@
 <?php
 
-use App\Account as AccountModel;
+use App\Models\Account as AccountModel;
+use App\Models\Ride as RideModel;
 use App\Repositories\RideModelRepository;
-use App\Ride as RideModel;
 use App\Services\MessageBroker\MessageBroker;
 use App\Services\UnitOfWork\DatabaseUnitOfWork;
 use App\Services\UnitOfWork\UnitOfWork;

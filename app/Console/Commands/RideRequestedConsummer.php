@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Account;
+use App\Models\Account;
 use App\Services\MessageBroker\MessageBroker;
 use Core\Application\UseCases\AcceptRide;
 use Core\Application\UseCases\DTOs\AcceptRideInput;

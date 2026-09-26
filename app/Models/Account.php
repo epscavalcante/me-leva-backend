@@ -1,11 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Position extends Model
+class Account extends Authenticatable
 {
     use HasFactory;
 
@@ -28,12 +28,12 @@ class Position extends Model
      *
      * @var string
      */
-    protected $primaryKey = 'position_id';
+    protected $primaryKey = 'account_id';
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $fillable = ['position_id', 'ride_id', 'latitude', 'longitude'];
+    protected $fillable = ['account_id', 'first_name', 'last_name', 'email', 'phone', 'is_driver', 'is_passenger', 'password', 'password_algorithm'];
 }

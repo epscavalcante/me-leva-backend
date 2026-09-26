@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Account as AccountModel;
+use App\Models\Account as AccountModel;
 use Core\Application\Repositories\AccountRepository;
 use Core\Domain\Entities\Account;
 

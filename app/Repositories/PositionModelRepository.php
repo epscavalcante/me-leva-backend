@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Position as PositionModel;
+use App\Models\Position as PositionModel;
 use Core\Application\Repositories\PositionRepository;
 use Core\Domain\Entities\Position;
 

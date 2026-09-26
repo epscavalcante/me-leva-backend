@@ -1,6 +1,6 @@
 <?php
 
-use App\Account;
+use App\Models\Account;
 
 describe('Signin Feature Tests', function () {
 

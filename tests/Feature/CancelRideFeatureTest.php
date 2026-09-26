@@ -1,7 +1,7 @@
 <?php
 
-use App\Account;
-use App\Ride;
+use App\Models\Account;
+use App\Models\Ride;
 use App\Services\TokenGenerator\TokenGenerator;
 use Core\Domain\ValueObjects\Uuid;
 
